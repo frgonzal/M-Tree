@@ -18,15 +18,15 @@ Para agregar un archivo:
 
 ## Estructura de los archivos  
 
--> src          ## Aqui se agregan los codigos  
-    -> main.c   
-    -> test.c  
-    -> file.c  
--> Headers      ## Aqui se agregan los archivos .h  
-    -> file.h  
--> Build        ## Aqui se agregan los archivos generados en la compilacion  
-    -> main  
-    -> test  
-    -> file.o  
--> Makefile     ## Archivo con todos los comandos para compilar y ejecutar  
+Aqui se agregan los codigos  
+-> src            
+
+Aqui se agregan los archivos .h  
+-> Headers  
+
+Aqui se agregan los archivos generados en la compilacion  
+-> Build
+
+Archivo con todos los comandos para compilar y ejecutar  
+-> Makefile
 
