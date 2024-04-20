@@ -2,7 +2,7 @@
 Contenido de las tareas de logaritmos. Que el poder de Navarro te acompañe.
 
 Para ejecutar el main:  
-    make run
+  make run
     
 Para ejecutar test:  
     make test
