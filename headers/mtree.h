@@ -1,7 +1,7 @@
 #ifndef MTREE_H
 #define MTREE_H
 
-#include "Point.h"
+#include "point.h"
 
 
 /**

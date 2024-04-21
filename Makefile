@@ -1,22 +1,27 @@
 CC = gcc
+
+## agregar flags? como -g o -Wall
 CFLAGS = -g -Wall
-LDLIBS=
 
-TARGET=./Build/main
-TEST=./Build/test
+## agregar librerias extra
+LDLIBS= -lm
 
-## AQUI INCLUIR LOS ARCHIVOS .C
+TARGET=./build/main
+TEST=./build/test
+
+## AQUI INCLUIR LOS ARCHIVOS .C 
+## excepto main y test
 ## agregar un "\" al final de cada nombre
 SRC = \
-	  src/MTree.c\
-	  src/Point.c
+	  src/mtree.c\
+	  src/point.c
 
 
 
 ## nombre de los headers (automatico)
-HDRS = $(wildcard Headers/*.h)
+HDRS = $(wildcard headers/*.h)
 ## nombre de los .o (automatico)
-OBJS = $(SRC:./src/%.c=./Build/%.o)
+OBJS = $(SRC:./src/%.c=./build/%.o)
 
 
 
@@ -26,19 +31,19 @@ all:
 	@echo " use \"make help\" to get more info"
 
 ## Compila un .o a partir del src
-./Build/%.o: ./src/%.c $(HDRS)
-	@ $(CC) $(CFLAGS) $(LDLIBS) -c $< -o $@
+./build/%.o: ./src/%.c $(HDRS)
+	@ $(CC) $(CFLAGS)  -c $< -o $@
 
 ## Compila el ejecutable del main y ejecuta
 run: $(OBJS) $(TARGET).o
-	@ $(CC) $(CFLAGS) $^ -o $(TARGET) && $(TARGET)
+	@ $(CC) $(CFLAGS) $^ -o $(TARGET) $(LDLIBS) && $(TARGET)
 
 ## Compila el ejecutable de los test y ejecuta
 test: $(OBJS) $(TEST).o
-	@ $(CC) $(CFLAGS) $^ -o $(TEST) && $(TEST)
+	@ $(CC) $(CFLAGS) $^ -o $(TEST) $(LDLIBS) && $(TEST)
 
 ## borra todo lo que se compilo
-clean: $(wildcard Build/*)
+clean: $(wildcard build/*)
 	@ rm -f $^
 
 
