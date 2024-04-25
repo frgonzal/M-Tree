@@ -3,6 +3,8 @@
 
 #include "point.h"
 
+#define B 4096
+
 
 /**
 *   @struct MTree
