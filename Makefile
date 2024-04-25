@@ -15,6 +15,8 @@ TEST=./build/test
 SRC = \
 	  src/mtree.c\
 	  src/random_generator.c\
+	  src/mtree_create_cp.c\
+	  src/mtree_create_ss.c\
 	  src/point.c
 
 
@@ -32,6 +34,10 @@ all:
 	@echo " use \"make help\" to get more info"
 
 ## Compila un .o a partir del src
+./build/%.o: ./src/*/%.c $(HDRS)
+	@ $(CC) $(CFLAGS)  -c $< -o $@
+
+## Compila un .o a partir del src
 ./build/%.o: ./src/%.c $(HDRS)
 	@ $(CC) $(CFLAGS)  -c $< -o $@
 
@@ -44,7 +50,9 @@ test: $(OBJS) $(TEST).o
 	@ $(CC) $(CFLAGS) $^ -o $(TEST) $(LDLIBS) && $(TEST)
 
 ## borra todo lo que se compilo
-clean: $(wildcard build/*)
+clean: $(wildcard build/*.o)
+	@ rm -f $(TARGET)
+	@ rm -f $(TEST)
 	@ rm -f $^
 
 
