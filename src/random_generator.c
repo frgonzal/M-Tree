@@ -19,7 +19,7 @@ static Point random_point(void){
 }
 
 
-Point* random_sample_generator(char *filename, int sample_size){
+Point* random_sample_generator(int sample_size){
     srand(time(NULL));
 
     Point *points = (Point*) malloc(sample_size*sizeof(Point));
