@@ -14,6 +14,7 @@ TEST=./build/test
 ## agregar un "\" al final de cada nombre
 SRC = \
 	  src/mtree.c\
+	  src/random_generator.c\
 	  src/point.c
 
 

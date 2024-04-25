@@ -1,16 +1,20 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "../headers/point.h"
+#include "../headers/random_generator.h"
+
 
 int main(){
-    printf("test\n");
-    
-    Point p1 = {0.02, -0.01};
-    printf("p1 = (%.5f %.5f)\n", p1.x, p1.y);
-    
-    Point p2 = {0.01234, 0.1043};
-    printf("p1 = (%.5f %.5f)\n", p2.x, p2.y);
-    
-    printf("dist(p1, p2) = %.5f\n", dist(p1, p2));
+    printf("random sample generator test\n");
+
+    int n = 10;
+
+    Point* points = random_sample_generator(n);
+
+    for(int i=0; i<n; i++)
+        printf("Point: %.5f %.5f \n", points[i].x, points[i].y);
+
+    free(points);
 
     return 0;
 }
