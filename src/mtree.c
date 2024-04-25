@@ -8,9 +8,10 @@ Point* search(MTree *mtree, Point q, double r){
     return NULL;
 }
 
-
 MTree* cp_create(Point *points, int n){
-
+    if (n <= B) {
+        return create_mtree(points, n);
+    }
     return NULL;
 }
 
