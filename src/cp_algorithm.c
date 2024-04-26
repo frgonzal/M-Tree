@@ -5,7 +5,6 @@
 
 
 
-
 MTree* create_mtree(Point *points, int n) {
     MTree *mtree = malloc(sizeof(MTree));
     mtree->p = points[0];
