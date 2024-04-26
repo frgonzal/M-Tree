@@ -17,6 +17,7 @@ SRC = \
 	  src/random_generator.c\
 	  src/mtree_create_cp.c\
 	  src/mtree_create_ss.c\
+	  src/random_generator.c\
 	  src/point.c
 
 
