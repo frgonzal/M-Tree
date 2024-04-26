@@ -21,7 +21,6 @@ SRC = \
 	  src/point.c
 
 
-
 ## nombre de los headers (automatico)
 HDRS = $(wildcard headers/*.h)
 ## nombre de los .o (automatico)
