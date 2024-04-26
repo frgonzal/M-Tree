@@ -1,4 +1,5 @@
 #include <stdio.h>
+<<<<<<< HEAD
 #include <stdlib.h>
 #include "../headers/mtree.h"
 #include "../headers/point.h"
@@ -37,6 +38,11 @@ static void assign_points_to_samples(Point *points, int n, Point *samples, int k
 }
 
 
+=======
+#include "../headers/mtree.h"
+#include "../headers/point.h"
+
+>>>>>>> 67ceb68 (change(test): cambios)
 MTree* cp_create(Point *points, int n){
 
     return NULL;
