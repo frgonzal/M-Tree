@@ -11,15 +11,12 @@ static MTree* create_mtree(Point *points, int n) {
     mtree->n = n - 1;
     if (mtree->n > 0) {
         mtree->a = malloc(mtree->n * sizeof(MTree));
-        for (int i = 0; i < mtree->n; i++) {
-            mtree->a[i].p = points[i + 1];
-            mtree->a[i].cr = 0;
-            mtree->a[i].a = NULL;
-            mtree->a[i].n = 0;
-        }
-    } else {
+        for (int i = 0; i < mtree->n; i++) 
+            mtree->a[i] = (MTree){points[i+1], 0, NULL, 0};
+
+    } else
         mtree->a = NULL;
-    }
+
     return mtree;
 }
 
