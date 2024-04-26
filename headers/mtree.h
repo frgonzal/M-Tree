@@ -36,12 +36,15 @@ typedef struct mtree {
 *   
 *   @param mtree Puntero a un nodo del MTree
 *   @param q Punto donde se hace la busqueda
-*   @param r Radio de busqueda.
+*   @param r Radio de busqueda
+*   @param size_arr Largo del resultado
+*   @param IOs Puntero a la variable donde se
+*              guardara el resultado de I/Os
 *   
 *   @return Retorna un puntero a un array 
 *           de puntos con el resultado
 */
-Point* search(MTree *mtree, Point q, double r, int *size_arr, int *n_querys);
+Point* search(MTree *mtree, Point q, double r, int *size_arr, int *IOs);
 // opciones para el retorno de puntos
 // 1- Lista enlazada: Hay que crear una estructura (facil y rapido)
 // 2- Array: Se necesita calcular el tamaño de antemano
@@ -62,9 +65,9 @@ MTree* cp_create(Point *points, int n);
 MTree* ss_create(Point *points, int n);
 
 
-/** Destruye el MTree para liberar memoria 
+/** Libera la memoria pedida por un mtree
 *
-*   @param mtree Nodo del mtree a destruir
+*   @param mtree Puntero al mtree
 */
 void destroy(MTree *mtree);
 
