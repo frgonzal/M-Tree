@@ -45,10 +45,6 @@ typedef struct mtree {
 *           de puntos con el resultado
 */
 Point* search(MTree *mtree, Point q, double r, int *size_arr, int *IOs);
-// opciones para el retorno de puntos
-// 1- Lista enlazada: Hay que crear una estructura (facil y rapido)
-// 2- Array: Se necesita calcular el tamaño de antemano
-//           para no pedir varias veces memoria con malloc
 
 
 /** Método Ciaccia-Patella
@@ -67,9 +63,9 @@ MTree* ss_create(Point *points, int n);
 
 /** Libera la memoria pedida por un mtree
 *
-*   @param mtree Puntero al mtree
+*   @param mtree Puntero al puntero de un MTree
 */
-void destroy(MTree *mtree);
+void mtree_destroy(MTree **mtree);
 
 
 #endif

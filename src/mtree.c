@@ -78,12 +78,17 @@ Point* search(MTree *mtree, Point q, double r, int *size_arr, int *IOs){
 }
 
 
-void destroy(MTree *mtree){
+static void destroy(MTree *mtree){
     if(mtree->a != NULL){
         for(int i=0; i<mtree->n; i++)
-            destroy( (mtree->a)+i);
+            destroy((mtree->a)+i);
 
         free(mtree->a);
-        mtree->a = NULL;
     }
+}
+
+void mtree_destroy(MTree **p_mtree){
+    destroy(*p_mtree);
+    free(*p_mtree);
+    *p_mtree = NULL;
 }
