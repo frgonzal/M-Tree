@@ -1,3 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "../headers/mtree.h"
+#include "../headers/point.h"
+
+
+
+
 MTree* create_mtree(Point *points, int n) {
     MTree *mtree = malloc(sizeof(MTree));
     mtree->p = points[0];
@@ -24,7 +32,7 @@ void assign_points_to_samples(Point *points, int n, Point *samples, int k, int *
         for (int j = 0; j < k; j++) {
             double d = dist(points[i], samples[j]);
             if (d < min_dist) {
-                min_dis = d;
+                min_dist = d;
                 clust_index = j;
             }
         }
