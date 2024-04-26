@@ -62,6 +62,7 @@ static int query(MTree *mtree, Point q, double r, Point* points){
     }
 
     return n;
+}
 
 
 Point* search(MTree *mtree, Point q, double r, int *size_arr, int *IOs){
