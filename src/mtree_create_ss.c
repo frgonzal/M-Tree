@@ -2,14 +2,7 @@
 #include "../headers/mtree.h"
 #include "../headers/point.h"
 
-
-Point* search(MTree *mtree, Point q, double r){
+MTree* ss_create(Point *points, int n){
 
     return NULL;
-}
-
-
-void destroy(MTree *mtree){
-
-    return;
 }
