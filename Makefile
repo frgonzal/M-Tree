@@ -20,6 +20,7 @@ SRC = \
 >>>>>>> d57a93a (change(Makefile): cambio en archivos)
 	  src/mtree_create_cp.c\
 	  src/mtree_create_ss.c\
+	  src/random_generator.c\
 	  src/point.c
 
 
