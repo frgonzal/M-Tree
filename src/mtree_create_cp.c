@@ -3,6 +3,7 @@
 #include <time.h>
 #include "../headers/mtree.h"
 #include "../headers/point.h"
+#include "../headers/queue.h"
 
 
 /** Agrega un array de puntos como hijos de un MTree */
@@ -23,12 +24,9 @@ static void add_childs(MTree *mtree, Point *points, int n);
 */
 static Point *random_k(Point **points, int *n, int k);
 
-static int max(int a, int b);
-
-static int min(int a, int b);
-
 static void swap_points(Point *p1, Point *p2);
 
+static Queue **create_F(Point *points, Point *p_f);
 
 
 MTree* cp_create(Point *points, int n){
@@ -43,13 +41,13 @@ MTree* cp_create(Point *points, int n){
 
     // De manera aleatoria se eligen k = min(B, n/B) puntos de P, que los llamaremos samples pf1 , . . . , pfk . 
     // Se insertan en un conjunto F de samples.
-    int k = min(B, n/B); 
+    int k = (n/B < B) ? n/B : B; 
     Point *p_f = random_k(&points, &n, k);
 
     // Se le asigna a cada punto en P su sample más cercano. Con eso se puede construir k conjuntos
     // F1, . . . , Fk 
     
-    Point **F;
+    Queue **F = create_F(points, p_f);
 
 
 
@@ -123,11 +121,7 @@ static void swap_points(Point *p1, Point *p2) {
     *p2 = temp;
 }
 
-static int max(int a, int b) {
-    return a > b ? a : b;
-}
 
-
-static int min(int a, int b) {
-    return a < b ? a : b;
+static Queue **create_F(Point *points, Point *p_f){
+    return NULL;
 }
