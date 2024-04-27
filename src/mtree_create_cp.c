@@ -36,8 +36,29 @@ static void assign_points_to_samples(Point *points, int n, Point *samples, int k
     }
 }
 
+/** Agrega hijos a un nodo MTree */
+static void add_childs(MTree *mtree, Point *points, int n){
+    double max_dist = 0;
+
+    for(int i=0; i<n; i++){
+        double dist_pq = dist(mtree->p, points[i]);
+        max_dist = dist_pq > max_dist ? dist_pq : max_dist;
+
+        (mtree->a)[i] = (MTree){points[i], 0, NULL, 0};
+    }
+}
+
 
 MTree* cp_create(Point *points, int n){
+    MTree *mtree = malloc(sizeof(MTree));
+    if(n <= B){
+        *mtree = (MTree){points[0], 0, malloc(B*sizeof(MTree)), n-1};
+        add_childs(mtree, points+1, n-1);
+        return mtree;
+    }
+
+
+
 
     return NULL;
 }
