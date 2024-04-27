@@ -82,7 +82,6 @@ static void destroy(MTree *mtree){
     if(mtree->a != NULL){
         for(int i=0; i<mtree->n; i++)
             destroy((mtree->a)+i);
-
         free(mtree->a);
     }
 }
