@@ -5,6 +5,7 @@
 #include "../headers/point.h"
 
 
+/** Agrega un array de puntos como hijos de un MTree */
 static void add_childs(MTree *mtree, Point *points, int n);
 
 
@@ -47,6 +48,7 @@ MTree* cp_create(Point *points, int n){
 
     // Se le asigna a cada punto en P su sample más cercano. Con eso se puede construir k conjuntos
     // F1, . . . , Fk 
+    
     Point **F;
 
 
