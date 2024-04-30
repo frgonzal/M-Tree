@@ -1,3 +1,4 @@
+#include <complex.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -7,14 +8,7 @@
 
 
 typedef struct {
-    Point *points;
-    int size;
-} PointsArray;
-
-/** Agrega un array de puntos como hijos de un MTree */
-static void add_childs(MTree *mtree, Point *points, int n);
-
-typedef struct {
+    MTree mtree;
     int h;
 } Tree;
 
@@ -29,33 +23,31 @@ typedef struct {
 *   Tambien modifica el array original, dejandolo solo con aquellos puntos
 *   que no fueron seleccionados, ademas reduce el n en k.
 *
-*   La funcion guardara los puntos aleatorios en las primeras k posiciones
-*   del array original. Luego retorna un puntero a la primera posicion y 
-*   modifica el array original para que apunte k posiciones adelante.
-*
-*   @param points El array de puntos original
-*   @param n      Puntero al largo del array
-*   @param k      Largo del array de puntos aleatorios
+*   @param points array of points
+*   @param n      number of points
+*   @param k      length of sample
 */
-static Point *random_k(Point **points, int *n, int k);
+static SampleF *random_sample_k(Point *points, int n, int k);
 
 static void swap_points(Point *p1, Point *p2);
 
-static PointsArray *create_F(Point *points, Point *p_f);
+/** Agrega un array de puntos como hijos de un MTree */
+static void add_childs(MTree *mtree, Point *points, int n);
+
 
 
 MTree create_tree(Point *points, int n){
 
-    PointsArray *F;
+
+    SampleF *F;
     int k = (n/B < B) ? n/B : B; 
     do{
         // De manera aleatoria se eligen k = min(B, n/B) puntos de P, que los llamaremos samples pf1 , . . . , pfk . 
         // Se insertan en un conjunto F de samples.
-        Point *p_f = random_k(&points, &n, k);
+        F = random_sample_k(points, n, k);
 
         // Se le asigna a cada punto en P su sample más cercano. Con eso se puede construir k conjuntos
         // F1, . . . , Fk 
-        F = create_F(points, p_f);
 
         // Etapa de redistribución: Si algún Fj es tal que |Fj| < b:
         //k = redistribute(F);
@@ -63,10 +55,10 @@ MTree create_tree(Point *points, int n){
 
     // Se realiza recursivamente el algoritmo CP en cada Fj, obteniendo el árbol T
     for (int i=0; i<k; i++){
-        MTree T_j = create_tree(F[i].points, F[i].size);
-        if (T_j.n < B/2){
+        //MTree T_j = create_tree(F[i].points, F[i].size);
+        //if (T_j.n < B/2){
             // split Tj into p sub-trees Tj ,..., Tj+p−1;
-        }
+        //}
     }
 
     return (MTree){0,0,0,NULL,0};
@@ -118,20 +110,23 @@ static void add_childs(MTree *mtree, Point *points, int n){
 
 
 /** Selecciona k puntos random de un array */
-static Point *random_k(Point **p_points, int *n, int k) {
+static SampleF *random_sample_k(Point *points, int n, int k) {
     srand(time(NULL));
-    Point *points = *p_points;
-    Point *sample = *p_points;
     
+    SampleF *F = malloc(k*sizeof(SampleF));
+
     for(int i=0; i<k; i++) {
-        int j = rand() % (*n);
+        int j = rand() % (n-i);
         swap_points(points, points+j);
         points++;
-        (*n)--;
     }
 
-    *p_points += k;
-    return sample;
+    for(int i=0; i<k; i++){
+
+    }
+        
+
+    return F;
 }
 
 /** Swaps to points on an array */
@@ -139,10 +134,4 @@ static void swap_points(Point *p1, Point *p2) {
     Point temp = *p1;
     *p1 = *p2;
     *p2 = temp;
-}
-
-/** Returns a list of Queues */
-static PointsArray* create_F(Point *points, Point *p_f){
-
-    return NULL;
 }
