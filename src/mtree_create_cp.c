@@ -13,9 +13,10 @@ typedef struct {
 } Tree;
 
 typedef struct {
-    Point f;
-    Queue *points;
+    Point *f;
+    Queue **points;
     int size;
+    int max_size;
 } SampleF;
 
 
@@ -32,7 +33,9 @@ static SampleF *random_sample_k(Point *points, int n, int k);
 /** Agrega un array de puntos como hijos de un MTree */
 static void add_childs(MTree *mtree, Point *points, int n);
 
+static void assign_to_f(SampleF *F, Point *points, int n);
 
+static int redistribute(SampleF *F, int k);
 
 MTree create_tree(Point *points, int n){
 
@@ -46,9 +49,11 @@ MTree create_tree(Point *points, int n){
 
         // Se le asigna a cada punto en P su sample más cercano. Con eso se puede construir k conjuntos
         // F1, . . . , Fk 
+        assign_to_f(F, points, n);
 
         // Etapa de redistribución: Si algún Fj es tal que |Fj| < b:
-        //k = redistribute(F);
+        k = redistribute(F, k);
+
     } while(k == 1);
 
     // Se realiza recursivamente el algoritmo CP en cada Fj, obteniendo el árbol T
@@ -110,19 +115,39 @@ static void add_childs(MTree *mtree, Point *points, int n){
 /** Selecciona k puntos random de un array */
 static SampleF *random_sample_k(Point *points, int n, int k) {
     srand(time(NULL));
+
+    int max_size = 1;
+    while(k > max_size)
+        max_size <<= 1;
+
     
-    SampleF *F = malloc(k*sizeof(SampleF));
+    SampleF *F = malloc(sizeof(SampleF));
+    *F = (SampleF) {
+        malloc(max_size*sizeof(Point)), 
+        malloc(max_size*sizeof(Queue*)), 
+        k, 
+        max_size
+    };
 
     for(int i=0; i<k; i++) {
         int j = rand() % (n-i);
-        swap_points(points, points+j);
-        points++;
+        swap_points(points+i, points+j+i);
     }
 
     for(int i=0; i<k; i++){
-
+        *(F->f+i) = points[i];
     }
-        
 
     return F;
+}
+
+static void assign_to_f(SampleF *F, Point *points, int n){
+
+    return;
+}
+
+
+static int redistribute(SampleF *F, int k){
+
+    return 0;
 }
