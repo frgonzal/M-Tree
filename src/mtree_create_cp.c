@@ -2,7 +2,7 @@
 #include "../headers/mtree.h"
 #include "../headers/point.h"
 
-MTree* cp_create(Point *points, int n){
+MTree* mtree_create_cp(Point *points, int n){
 
     return NULL;
 }
