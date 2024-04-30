@@ -12,7 +12,7 @@ struct queue {
     int len;
 };
 
-Queue *makeQueue() {
+Queue *q_init() {
     Queue *q = malloc(sizeof(Queue));
     q->first = NULL;
     q->plast = &q->first;
@@ -20,7 +20,7 @@ Queue *makeQueue() {
     return q;
 }
 
-void put(Queue *q, void *ptr) {
+void q_put(Queue *q, void *ptr) {
     QueueNode *node = malloc(sizeof(QueueNode));
     node->val = ptr;
     node->next = NULL;
@@ -29,7 +29,7 @@ void put(Queue *q, void *ptr) {
     q->len++;
 }
 
-void *get(Queue *q) {
+void *q_get(Queue *q) {
     if (q->first == NULL) {
         return NULL;
     }
@@ -44,7 +44,7 @@ void *get(Queue *q) {
     return val;
 }
 
-void *peek(Queue *q) {
+void *q_peek(Queue *q) {
     if (q->first == NULL) {
         return NULL;
     } else {
@@ -52,15 +52,15 @@ void *peek(Queue *q) {
     }
 }
 
-int emptyQueue(Queue *q) {
+int q_empty(Queue *q) {
     return q->first == NULL;
 }
 
-int queueLength(Queue *q) {
+int q_length(Queue *q) {
     return q->len;
 }
 
-void destroyQueue(Queue *q) {
+void q_destroy(Queue *q) {
     QueueNode *node = q->first;
     while (node != NULL) {
         QueueNode *next = node->next;
@@ -68,4 +68,10 @@ void destroyQueue(Queue *q) {
         node = next;
     }
     free(q);
+}
+
+void q_swap(Queue **q1, Queue **q2){
+    Queue *temp = *q1;
+    *q1 = *q2;
+    *q2 = temp;
 }
