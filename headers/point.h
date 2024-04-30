@@ -24,4 +24,8 @@ double dist(Point p1, Point p2);
 /** Comprueba si dos puntos son iguales */
 int point_equal(Point p1, Point p2);
 
+/** Swaps to points on an array */
+void swap_points(Point *p1, Point *p2);
+
+
 #endif

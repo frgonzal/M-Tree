@@ -29,8 +29,6 @@ typedef struct {
 */
 static SampleF *random_sample_k(Point *points, int n, int k);
 
-static void swap_points(Point *p1, Point *p2);
-
 /** Agrega un array de puntos como hijos de un MTree */
 static void add_childs(MTree *mtree, Point *points, int n);
 
@@ -127,11 +125,4 @@ static SampleF *random_sample_k(Point *points, int n, int k) {
         
 
     return F;
-}
-
-/** Swaps to points on an array */
-static void swap_points(Point *p1, Point *p2) {
-    Point temp = *p1;
-    *p1 = *p2;
-    *p2 = temp;
 }
