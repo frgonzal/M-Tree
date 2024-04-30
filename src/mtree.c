@@ -2,58 +2,29 @@
 #include <stdlib.h>
 #include "../headers/mtree.h"
 #include "../headers/point.h"
+#include "../headers/point_set.h"
 
 
-/** Variable global para la posicion en la que se debe 
-*   guardar el siguiente punto en la query
-*/
-static int pos;
-
-
-/** Calcula el numero de puntos del resultado.
-*   Util para pedir memoria para el resultado.
-*
-*   @param mtree  Puntero al mtree
-*   @param q      Punto central del radio de busqueda
-*   @param r      Radio de busqueda
+/** Search Query
 *   
-*   @return The number of points that are contained in the search
-*/
-static int query_size(MTree *mtree, Point q, double r){
-    double dist_pq = dist(mtree->p, q);
-    int n = 0;
-
-    if(dist_pq <= r) 
-        n++;
-
-    if(mtree->a != NULL && dist_pq <= mtree->cr + r){
-        for(int i=0; i<mtree->n; i++)
-            n += query_size((mtree->a)+i, q, r);
-    }   
-    return n;
-}
-
-
-/** Busca todos los puntos que estan en la query y los agrega a un array.
+*   @param mtree  MTree
+*   @param q      Search center
+*   @param r      Search radius
+*   @param s      Result set of points
 *   
-*   @param mtree  Puntero al mtree
-*   @param q      Punto central del radio de busqueda
-*   @param r      Radio de busqueda
-*   @param points Array de puntos donde se guardaran los resultados
-*   
-*   @return el numero de lecturas que se hacen en disco
+*   @return Query I/Os
 */
-static int query(MTree *mtree, Point q, double r, Point* points){
+static int query(MTree *mtree, Point q, double r, PSet *s){
     int n = 1;
 
     double dist_pq = dist(mtree->p, q);
 
     if(dist_pq <= r)
-        points[pos++] = mtree->p;
+        pset_push(s, mtree->p);
 
     if(mtree->a != NULL && dist_pq <= mtree->cr + r){
         for(int i=0; i<mtree->n; i++)
-            n += query((mtree->a)+i, q, r, points);
+            n += query(mtree->a+i, q, r, s);
     }
 
     return n;
@@ -64,16 +35,18 @@ MTreeSearch mtree_search(MTree *mtree, Point q, double r){
     if (mtree == NULL) 
         return (MTreeSearch){NULL, 0, 0};
 
-    int result_size = query_size(mtree, q, r);
-    Point *points = (Point*) malloc(result_size*sizeof(Point));
 
-    pos = 0;
-    int ios = query(mtree, q, r, points);
+    PSet *s = pset_init(128);
+    int ios = query(mtree, q, r, s);
 
-    return (MTreeSearch){points,result_size,ios};
+    int size = pset_len(s);
+    Point *points = pset_to_array_and_destroy(s);
+
+    return (MTreeSearch){points,size,ios};
 }
 
 
+/** Destroy a node */
 static void destroy_node(MTree *mtree){
     if (mtree == NULL) return;
 
@@ -87,5 +60,5 @@ static void destroy_node(MTree *mtree){
 
 void mtree_destroy(MTree *mtree){
     destroy_node(mtree);
-    *mtree = (MTree){0, 0, 0, NULL, 0};
+    free(mtree);
 }

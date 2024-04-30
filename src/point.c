@@ -8,3 +8,7 @@ double dist(Point p1, Point p2){
 
     return sqrt(diff_x*diff_x + diff_y*diff_y);
 }
+
+int point_equal(Point p1, Point p2){
+    return (p1.x == p2.x) && (p1.y == p2.y);
+}

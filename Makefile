@@ -17,7 +17,9 @@ SRC = \
 	  src/random_generator.c\
 	  src/mtree_create_cp.c\
 	  src/mtree_create_ss.c\
-	  src/point.c
+	  src/point.c\
+	  src/point_set.c\
+	  src/queue.c
 
 
 ## nombre de los headers (automatico)

@@ -12,11 +12,16 @@ typedef struct {
 } Point;
 
 /** Calcula distancia entre 2 puntos 
+*
 *   @param p1 punto 1
 *   @param p2 punto 2
 *   
 *   @return distancia entre los puntos
 */
 double dist(Point p1, Point p2);
+
+
+/** Comprueba si dos puntos son iguales */
+int point_equal(Point p1, Point p2);
 
 #endif
