@@ -12,3 +12,9 @@ double dist(Point p1, Point p2){
 int point_equal(Point p1, Point p2){
     return (p1.x == p2.x) && (p1.y == p2.y);
 }
+
+void swap_points(Point *p1, Point *p2) {
+    Point temp = *p1;
+    *p1 = *p2;
+    *p2 = temp;
+}
