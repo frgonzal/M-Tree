@@ -16,27 +16,15 @@ static int pos;
 *   @param mtree  Puntero al mtree
 *   @param q      Punto central del radio de busqueda
 *   @param r      Radio de busqueda
-<<<<<<< HEAD
-*   @param points Array de puntos donde se guardaran los resultados
-*   
-*   @return el numero de lecturas que se hacen en disco
-=======
 *   
 *   @return The number of points that are contained in the search
->>>>>>> main
 */
 static int query_size(MTree *mtree, Point q, double r){
     double dist_pq = dist(mtree->p, q);
     int n = 0;
 
-<<<<<<< HEAD
-    if(mtree->a == NULL && dist_pq <= r){
-        return 1;
-    }
-=======
     if(dist_pq <= r) 
         n++;
->>>>>>> main
 
     if(mtree->a != NULL && dist_pq <= mtree->cr + r){
         for(int i=0; i<mtree->n; i++)
