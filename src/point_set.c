@@ -36,18 +36,18 @@ void pset_push(PSet *s, Point p){
         s->points = realloc(s->points, s->max_size*sizeof(Point));
     }
 
-    s->points[s->size++] = p;
+    (s->points)[s->size++] = p;
 }
 
 
 static void remove_point(PSet *s, int i){
     for (int j=i; j<s->size-1; j++)
-        s->points[j] = s->points[j+1];
+        (s->points)[j] = (s->points)[j+1];
 }
 
 void pset_remove(PSet *s, Point p){
     for(int i=0; i<s->size; i++){
-        if(point_equal(s->points[i], p))
+        if(point_equal((s->points)[i], p))
             remove_point(s, i);
     }
     s->size--;
@@ -91,7 +91,7 @@ int pset_maxlen(PSet *s){
 
 int pset_contains(PSet *s, Point p){
     for(int i=0; i<s->size; i++){
-        if (point_equal(p, s->points[i]))
+        if (point_equal(p, (s->points)[i]))
             return 1;   
     }
     return 0;
