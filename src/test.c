@@ -60,7 +60,7 @@ void vector_test(){
     time_t t1, t2;
 
     printf("\n=== vector test ===\n");
-    int n = 33554432; // == 2^25
+    int n = MAX; // == 2^25
     Vector *vec1 = vec_init(0, Point);
     Point *points = random_sample_generator(n);
 
@@ -101,9 +101,20 @@ void vector_test(){
     printf("== to array and destroy ==\n");
     free(points);
     points = (Point*)vec_to_array_and_destroy(vec1);
+     
+    printf("== pop ==\n");
 
-    
-    vec1 = vec_init(10, Point);
+    vec1 = vec_init_from_array(points, 5, Point);
+    printf("size: %d\n", vec_len(vec1));
+    print_array(vec_to_array(vec1), vec_len(vec1));    
+
+    Point x = vec_pop_t(vec1, 0, Point);
+    vec_pop_t(vec1, 2, Point);
+
+    printf("x = ");
+    print_array(&x, 1);    
+    print_array(vec_to_array(vec1), vec_len(vec1));    
+
     free(points);
     vec_destroy(vec1);
 

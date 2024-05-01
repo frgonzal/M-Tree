@@ -48,6 +48,19 @@ void *vec_get(Vector *v, int pos);
 */
 void vec_remove(Vector *v, int pos);
 
+/** Removes x[i] and returns x[i]
+*   
+*   @warning this uses malloc
+*/
+void *vec_pop(Vector *v, int pos);
+#define vec_pop_t(v, pos, Type) \
+    ({ \
+        Type *p = (Type*)vec_pop(v, pos); \
+        Type  x = *p; \
+        free(p); \
+        x; \
+    })
+
 /** Returns the number of points on the Set */
 int vec_len(Vector *v);
 
