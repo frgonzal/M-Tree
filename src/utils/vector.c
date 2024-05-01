@@ -1,8 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 #include "../../headers/utils/vector.h"
-#include "../../headers/point.h"
 
 struct vector{
     void *elements;
