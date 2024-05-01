@@ -13,13 +13,13 @@ TEST=./build/test
 ## excepto main y test
 ## agregar un "\" al final de cada nombre
 SRC = \
-	  src/mtree.c\
-	  src/random_generator.c\
-	  src/mtree_create_cp.c\
-	  src/mtree_create_ss.c\
-	  src/point.c\
-	  src/point_set.c\
-	  src/queue.c
+	  src/mtree/point.c\
+	  src/mtree/mtree.c\
+	  src/mtree/mtree_create_cp.c\
+	  src/mtree/mtree_create_ss.c\
+	  src/utils/vector.c\
+	  src/utils/random_generator.c\
+	  src/utils/queue.c
 
 
 ## nombre de los headers (automatico)

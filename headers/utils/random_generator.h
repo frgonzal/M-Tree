@@ -1,7 +1,7 @@
 #ifndef RANDOM_GENERATOR_H
 #define RANDOM_GENERATOR_H
 
-#include "point.h"
+#include "../point.h"
 
 /** Genera un array de puntos
 *   Los puntos tienen coordenadas con valores entre 0 y 1
@@ -10,5 +10,9 @@
 */
 Point* random_sample_generator(int sample_size);
 
+/** Returns an array of k random elements
+*   from an array of size n
+*/
+Point* random_k_sample(Point *arr, int n, int k);
 
 #endif

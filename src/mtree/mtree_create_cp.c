@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "../headers/mtree.h"
-#include "../headers/point.h"
-#include "../headers/queue.h"
+#include "../../headers/mtree.h"
+#include "../../headers/point.h"
+#include "../../headers/utils/queue.h"
 
 
 typedef struct {

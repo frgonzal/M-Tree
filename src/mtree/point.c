@@ -1,5 +1,5 @@
 #include <math.h>
-#include "../headers/point.h"
+#include "../../headers/point.h"
 
 
 double dist(Point p1, Point p2){
@@ -17,4 +17,12 @@ void swap_points(Point *p1, Point *p2) {
     Point temp = *p1;
     *p1 = *p2;
     *p2 = temp;
+}
+
+int cmp_points(void *pp1, void *pp2){
+    Point p1 = *(Point*) pp1;
+    Point p2 = *(Point*) pp2;
+    if(p1.x == p2.x && p1.y == p2.y) 
+        return 0;
+    return -1;
 }

@@ -1,9 +1,9 @@
-#include <complex.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "../headers/point.h"
-#include "../headers/random_generator.h"
+#include <string.h>
+#include "../../headers/point.h"
+#include "../../headers/utils/random_generator.h"
 
 
 /** Genera un Punto con coordenadas aleatorias
@@ -28,4 +28,19 @@ Point* random_sample_generator(int sample_size){
         points[i] = random_point();
 
     return points;
+}
+
+
+Point* random_k_sample(Point *arr, int n, int k){
+    srand(time(NULL));
+    Point *sample = malloc(n*sizeof(Point));
+    memcpy(sample, arr, n*sizeof(Point));
+
+    for(Point* p=sample; p<sample+k; p++){
+        int j = rand() % (n--);
+        swap_points(p, p+j);
+    }
+
+    sample = realloc(sample, k*sizeof(Point));
+    return sample;
 }

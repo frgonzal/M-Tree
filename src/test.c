@@ -1,13 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
 #include "../headers/point.h"
-#include "../headers/random_generator.h"
-#include "../headers/point_set.h"
+#include "../headers/utils/random_generator.h"
+#include "../headers/utils/vector.h"
 
-static void print_array(Point *points, int n){
+#define MAX 33554432
+
+
+// Function to calculate elapsed time in milliseconds
+long long elapsed_time_millis(struct timespec *start, struct timespec *end) {
+    long long start_ms = start->tv_sec * 1000LL + start->tv_nsec / 1000000LL;
+    long long end_ms = end->tv_sec * 1000LL + end->tv_nsec / 1000000LL;
+    return end_ms - start_ms;
+}
+
+
+static void print_array(Point const *points, int n){
     printf("[");
     for(int i=0; i<n; i++){
-        printf(" (%.2f, %.2f), ",points[i].x, points[i].y);
+        printf("(%.2f, %.2f)",points[i].x, points[i].y);
         if(i < n-1)
             printf(", ");
     }
@@ -15,71 +28,98 @@ static void print_array(Point *points, int n){
 }
 
 
-void random_sample_generator_test(int n){
+void random_test(int n){
+    struct timespec start, end;
+    long long duration;
+
+    printf("\n== random test ==\n");
+
     printf("random sample generator test\n");
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    Point *points = random_sample_generator(MAX);
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    duration = elapsed_time_millis(&start, &end);
+    print_array(points, 3);
+    printf("time: %lld\n", duration);
 
-    Point* points = random_sample_generator(n);
+    printf("random k sample test\n");
 
-    for(int i=0; i<n; i++)
-        printf("Point: %.5f %.5f \n", points[i].x, points[i].y);
+    clock_gettime(CLOCK_MONOTONIC, &start);
+    Point *points_k = random_k_sample(points, MAX, 5);
+    clock_gettime(CLOCK_MONOTONIC, &end);
+    duration = elapsed_time_millis(&start, &end);
+    printf("time: %lld\n", duration);
+    print_array(points_k, 3);
 
+    free(points_k);
     free(points);
 }
 
-void pset_test(){
-    printf("\n=== Point Set Test ===\n");
 
-    int n = 25;
-    PSet *s;
+void vector_test(){
+    time_t t1, t2;
+
+    printf("\n=== vector test ===\n");
+    int n = 33554432; // == 2^25
+    Vector *vec1 = vec_init(0, Point);
     Point *points = random_sample_generator(n);
 
-    s = pset_init(n);
-
-    Point *points2 = pset_to_array(s);
-
-    printf("Agregando %d puntos\n", n);
+    printf("== pushing elements to the vector ==\n");
+    t1 = time(NULL);
     for(int i=0; i<n; i++)
-        pset_push(s, points[i]);
-    points2 = pset_to_array(s);
-    print_array(points2, pset_len(s));
+        vec_push(vec1, points+i);
+    t2 = time(NULL);
 
-    int k = 10;
-    printf("Removiendo punto (%.2f,%.2f)\n", points2[k].x, points2[k].y);
-    pset_remove(s, points2[k]);
-    points2 = pset_to_array(s);
+    printf("time pushing elems: %ld\n", t2-t1);
+    
+    vec_destroy(vec1);
 
-    while(pset_len(s) >= 20){
-        pset_remove(s, points2[0]);        
-    }
-    points2 = pset_to_array(s);
-    print_array(points, n);
+    printf("== init from array ==\n");
+    vec1 = vec_init_from_array(points, n, Point);
+    print_array(vec_to_array_t(vec1, Point), 10);
 
 
-    n = 1e3;
-    printf("test de memoria\n");
-    points = random_sample_generator(n);
+    printf("== find and remove ==\n");
 
-    pset_init_from_array(points, n);
+    int i = vec_find(vec1, points, &cmp_points);
+    printf("find (%.2f, %.2f) %d\n", points->x, points->y, i);
+    vec_remove(vec1, i);
+    print_array(vec_to_array_t(vec1, Point), 5);
+    printf("size: %d\n", vec_len(vec1));
 
+
+    printf("== get element ==\n");
+    Point p1 = vec_get_t(vec1, 0, Point);
+    Point p2 = *(Point*)vec_get(vec1, 1);
+    print_array(&p1, 1);
+    print_array(&p2, 1);
+
+    printf("== copy to array ==\n");
     free(points);
-    int size = pset_len(s);
-    points = pset_to_array_and_destroy(s);
-
-    s = pset_init_from_array(points, size);
-
+    points = (Point*)vec_copy_to_array(vec1);
+    
+    printf("== to array and destroy ==\n");
     free(points);
-    points = pset_copy_to_array(s);
+    points = (Point*)vec_to_array_and_destroy(vec1);
 
+    
+    vec1 = vec_init(10, Point);
     free(points);
-    pset_destroy(s);
+    vec_destroy(vec1);
+
 }
-
 
 
 int main(){
+    printf("=====  TEST  =====\n");
 
-    random_sample_generator_test(2);
-    pset_test();
+    //random_sample_generator_test(2);
+
+    vector_test();
+
+    random_test(1e5);
+
+
 
     return 0;
 }
