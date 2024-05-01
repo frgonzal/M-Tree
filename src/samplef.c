@@ -1,3 +1,4 @@
+#include <linux/limits.h>
 #include <stdlib.h>
 #include "../headers/samplef.h"
 #include "../headers/point.h"
@@ -27,25 +28,9 @@ SampleF *samplef_init(int init_size){
 }
 
 void samplef_destroy(SampleF *f){
-    for(int i=0; i<f->size; i++){
-        //(f->points)[i];
-    }
+    for(int i=0; i<f->size; i++)
+        q_destroy((f->points)[i]);
+
+    free(f->f);
+    free(f->points);
 }
-
-/** Adds a f_k */
-void samplef_add_sample_point(SampleF *f, Point p, Queue* q);
-
-/** Adds a point to the Queue */
-void samplef_add_point(SampleF *f, Point p, Queue* q);
-
-/** Removes the f[i] */
-void samplef_remove(SampleF *f, Point p, int i);
-
-/** Returns the f[i] == p */
-int samplef_find(SampleF *f, Point p);
-
-/** Returns the number of points on the Set */
-int samplef_len(SampleF *f);
-
-/** Get the F_i array of points */
-Point *samplef_array_fi(SampleF *f, int i);

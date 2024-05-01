@@ -12,23 +12,35 @@ SampleF *samplef_init(int init_size);
 /** Destroy the Set */
 void samplef_destroy(SampleF *f);
 
-/** Adds a f_k */
-void samplef_add_sample_point(SampleF *f, Point p, Queue* q);
+/** Adds a point to F */
+void samplef_push(SampleF *f, Point p);
 
-/** Adds a point to the Queue */
-void samplef_add_point(SampleF *f, Point p, Queue* q);
+/** Assings a point to its nearest f_k */
+void samplef_assign_from_array(SampleF *f, Point *p, int n);
 
-/** Removes the f[i] */
-void samplef_remove(SampleF *f, Point p, int i);
+/** Assings a point to its nearest f_k */
+void samplef_assign_from_queue(SampleF *f, Queue *q);
 
-/** Returns the f[i] == p */
+/** Removes the f[i], and return its queue of points */
+Queue *samplef_remove(SampleF *f, Point p, int i);
+
+/** Returns the position of p */
 int samplef_find(SampleF *f, Point p);
 
-/** Returns the number of points on the Set */
+/** Get f_i */
+int samplef_get(SampleF *f, int i);
+
+/** Returns size of the sample */
 int samplef_len(SampleF *f);
 
-/** Get the F_i array of points */
-Point *samplef_array_fi(SampleF *f, int i);
+/** Returns the array F */
+Point *sampef_get_sample(SampleF *f);
+
+/** Get the Queue of F_i */
+Queue* samplef_get_queue_points(SampleF *f, int i);
+
+/** Get the Array of F_i */
+Point *samplef_get_array_points(SampleF *f, int i);
 
 
 #endif
