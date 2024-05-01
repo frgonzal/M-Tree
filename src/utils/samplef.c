@@ -41,13 +41,6 @@ void samplef_push(SampleF *f, Point *p){
     f->size++;
 }
 
-void samplef_assign_from_array(SampleF *f, Point *p, int n){
-    return;
-}
-
-void samplef_assign_from_queue(SampleF *f, Queue *q){
-    return;
-}
 
 Queue *samplef_remove(SampleF *f, Point *p){
     int pos = vec_find(f->f, p, &cmp_points);
@@ -70,14 +63,44 @@ Point samplef_get(SampleF *f, int pos){
     return vec_get_t(f->f, pos, Point);
 }
 
-/** Returns size of the sample */
-int samplef_len(SampleF *f);
+int samplef_len(SampleF *f){
+    return f->size;
+}
 
-/** Returns the array F */
-Point const *sampef_get_sample(SampleF *f);
+Point const *sampef_get_sample(SampleF *f){
+    return (Point const *)vec_to_array(f->f);
+}
 
-/** Get the Queue of F_i */
-Queue* samplef_get_queue_points(SampleF *f, int i);
+Queue* samplef_get_queue_points(SampleF *f, int pos){
+    return vec_get_t(f->F, pos, Queue*);
+}
 
-/** Get the Array of F_i */
-Point *samplef_get_array_points(SampleF *f, int i);
+Point *samplef_get_array_points(SampleF *f, int pos){
+    Queue *q = samplef_get_queue_points(f, pos);
+    Point *points = malloc(vec_len(f->F)*sizeof(Point));
+
+    for(int i=0; i<q_length(q); i++){
+        Point *p = (Point*)q_get(q);
+        points[i] = *p;
+        q_put(q, &points[i]);
+    }
+    return points;
+}
+
+
+static void samplef_assign_point(SampleF *f, Point *p){
+    //double dist2;
+    //for(int i=0; i<f->size; i++){
+
+
+    //}
+    //Queue *q = samplef_get_queue_points(f, pos);
+}
+
+void samplef_assign_from_array(SampleF *f, Point *p, int n){
+    return;
+}
+
+void samplef_assign_from_queue(SampleF *f, Queue *q){
+    return;
+}
