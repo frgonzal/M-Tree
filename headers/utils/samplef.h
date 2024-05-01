@@ -30,7 +30,7 @@ Queue *samplef_pop(SampleF *f, int i);
 int samplef_find(SampleF *f, Point *p);
 
 /** Get f_i */
-Point* samplef_get(SampleF *f, int i);
+Point samplef_get(SampleF *f, int i);
 
 /** Returns size of the sample */
 int samplef_len(SampleF *f);

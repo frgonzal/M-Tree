@@ -50,25 +50,27 @@ void samplef_assign_from_queue(SampleF *f, Queue *q){
 }
 
 Queue *samplef_remove(SampleF *f, Point *p){
-    int i = vec_find(f->f, p, &cmp_points);
-    //vec_remove(f->f, vec_find);
+    int pos = vec_find(f->f, p, &cmp_points);
+    vec_remove(f->f, pos);
+    f->size--;
+    return vec_pop_t(f->F, pos, Queue*);
 }
 
 Queue *samplef_pop(SampleF *f, int i){
-
+    //vec_remove(, int pos)
 }
 
 /** Returns the position of p */
-//int samplef_find(SampleF *f, Point p);
+int samplef_find(SampleF *f, Point *p);
 
 /** Get f_i */
-//int samplef_get(SampleF *f, int i);
+Point samplef_get(SampleF *f, int i);
 
 /** Returns size of the sample */
 int samplef_len(SampleF *f);
 
 /** Returns the array F */
-//Point *sampef_get_sample(SampleF *f);
+Point const *sampef_get_sample(SampleF *f);
 
 /** Get the Queue of F_i */
 Queue* samplef_get_queue_points(SampleF *f, int i);
