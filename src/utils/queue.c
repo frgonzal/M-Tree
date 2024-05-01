@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "../headers/queue.h"
+#include "../../headers/utils/queue.h"
 
 
 typedef struct node {

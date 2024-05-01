@@ -27,5 +27,6 @@ int point_equal(Point p1, Point p2);
 /** Swaps to points on an array */
 void swap_points(Point *p1, Point *p2);
 
+int cmp_points(void *pp1, void *pp2);
 
 #endif
