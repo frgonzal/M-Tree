@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../headers/point.h"
 #include "../headers/random_generator.h"
 #include "../headers/point_set.h"
@@ -78,8 +79,12 @@ void pset_test(){
 
 int main(){
 
-    random_sample_generator_test(2);
-    pset_test();
+    //random_sample_generator_test(2);
+    //pset_test();
+
+    printf("%ld\n", sizeof(Point));
+    printf("%ld\n", sizeof(void*));
+
 
     return 0;
 }
