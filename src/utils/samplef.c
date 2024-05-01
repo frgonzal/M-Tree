@@ -56,15 +56,19 @@ Queue *samplef_remove(SampleF *f, Point *p){
     return vec_pop_t(f->F, pos, Queue*);
 }
 
-Queue *samplef_pop(SampleF *f, int i){
-    //vec_remove(, int pos)
+Queue *samplef_pop(SampleF *f, int pos){
+    f->size--;
+    vec_remove(f->f, pos);
+    return vec_pop_t(f->F, pos, Queue*);
 }
 
-/** Returns the position of p */
-int samplef_find(SampleF *f, Point *p);
+int samplef_find(SampleF *f, Point *p){
+    return vec_find(f->f, p, &cmp_points);
+}
 
-/** Get f_i */
-Point samplef_get(SampleF *f, int i);
+Point samplef_get(SampleF *f, int pos){
+    return vec_get_t(f->f, pos, Point);
+}
 
 /** Returns size of the sample */
 int samplef_len(SampleF *f);

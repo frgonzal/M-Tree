@@ -38,7 +38,7 @@ void vec_push(Vector *v, void *x);
 
 /** Get the elemente v[pos] */
 void *vec_get(Vector *v, int pos);
-#define vec_get_t(v, pos, type) {*(type*)vec_get(v, pos)}
+#define vec_get_t(v, pos, type) *(type*)vec_get(v, pos)
 
 /** Removes the element x[i]
 *   It searches for the point on the Set
