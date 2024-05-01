@@ -89,11 +89,12 @@ Point *samplef_get_array_points(SampleF *f, int pos){
 
 
 static void samplef_assign_point(SampleF *f, Point *p){
-    //double dist2;
-    //for(int i=0; i<f->size; i++){
+    double min_dist2 = 1e5;
+    Point const *points = vec_to_array(f->f)
+    for(int i=0; i<f->size; i++){
 
 
-    //}
+    }
     //Queue *q = samplef_get_queue_points(f, pos);
 }
 
