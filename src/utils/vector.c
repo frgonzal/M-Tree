@@ -1,6 +1,8 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #include "../../headers/utils/vector.h"
+#include "../../headers/point.h"
 
 struct vector{
     void *elements;
@@ -68,9 +70,9 @@ void vec_remove(Vector *v, int pos){
     
     int i = pos*v->type_size;
     int j = (pos+1)*v->type_size;
-    int n = (v->size - pos);
+    int n = (v->size - pos)*v->type_size;
     memmove(v->elements+i, v->elements+j, n);
-    v->size--;
+    (v->size)--;
 
     if(v->size < v->max_size >> 1){
         v->max_size >>= 1;
@@ -78,6 +80,17 @@ void vec_remove(Vector *v, int pos){
     }
 }
 
+void *vec_pop(Vector *v, int pos){
+    if(pos < 0 || v->size <= pos)
+        return NULL;
+
+    void *elem = malloc(v->type_size);
+    void *src = vec_get(v, pos);
+    memcpy(elem, src, v->type_size);
+
+    vec_remove(v, pos);
+    return elem;
+}
 
 int vec_len(Vector *v){
     return v->size;
