@@ -9,14 +9,9 @@
 #include "../../headers/utils/random_generator.h"
 
 
-typedef struct {
-    MTree mtree;
-    int h;
-} Tree;
-
-
 /** Agrega un array de puntos como hijos de un MTree */
-static void add_childs(MTree *mtree, Point *points, int n);
+static void add_childs(MTree *mtree, Point const *points, int n);
+
 
 MTree create_tree(Point *points, int n){
 
@@ -49,7 +44,8 @@ MTree create_tree(Point *points, int n){
     return (MTree){0,0,0,NULL,0};
 }
 
-MTree* mtree_create_cp(Point *points, int n){
+
+MTree* mtree_create_cp(Point const *points, int n){
     MTree *mtree = malloc(sizeof(MTree));
 
     // Si |P| ≤ B, se crea un árbol T , se insertan todos los puntos a T y se retorna T
@@ -64,23 +60,8 @@ MTree* mtree_create_cp(Point *points, int n){
 }
 
 
-static void assign_points_to_samples(Point *points, int n, Point *samples, int k, int *cluster_index) {
-    for (int i = 0; i < n; i++) {
-        double min_dist = 99999;
-        int clust_index = 0;
-        for (int j = 0; j < k; j++) {
-            double d = dist(points[i], samples[j]);
-            if (d < min_dist) {
-                min_dist = d;
-                clust_index = j;
-            }
-        }
-        cluster_index[i] = clust_index;
-    }
-}
-
 /** Agrega hijos a un nodo MTree */
-static void add_childs(MTree *mtree, Point *points, int n){
+static void add_childs(MTree *mtree, Point const *points, int n){
     double max_dist = 0;
 
     for(int i=0; i<n; i++){

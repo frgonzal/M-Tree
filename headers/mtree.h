@@ -56,7 +56,7 @@ MTreeSearch mtree_search(MTree *mtree, Point q, double r);
 *   @param points array de puntos
 *   @param n      tamaño del array
 */
-MTree* mtree_create_cp(Point *points, int n);
+MTree* mtree_create_cp(Point const *points, int n);
 
 
 /** Método Sexton-Swinbank 
@@ -64,7 +64,7 @@ MTree* mtree_create_cp(Point *points, int n);
 *   @param points array de puntos
 *   @param n      tamaño del array
 */
-MTree* mtree_create_ss(Point *points, int n);
+MTree* mtree_create_ss(Point const *points, int n);
 
 
 /** Free MTree memory
