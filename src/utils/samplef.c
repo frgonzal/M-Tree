@@ -7,15 +7,13 @@
 struct sample_f {
     Vector *f;
     Vector *F;
-    int size;
 };
 
 SampleF *samplef_init(int init_size){
     SampleF *f = malloc(sizeof(SampleF));
     *f = (SampleF){
         vec_init(init_size, Point),
-        vec_init(init_size, Vector*),
-        0
+        vec_init(init_size, Vector*)
     };
 
     return f;
@@ -25,8 +23,7 @@ SampleF *samplef_init_from_array(Point const *points, int size){
     SampleF *f = malloc(sizeof(SampleF));
     *f = (SampleF){
         vec_init_from_array((void*)points, size, Point),
-        vec_init(size, Vector*),
-        size
+        vec_init(size, Vector*)
     };
 
     for(int i=0; i<size; i++){
@@ -54,12 +51,10 @@ void samplef_push(SampleF *f, Point *p){
     vec_push(f->f, p);
     Vector *v = vec_init(0, Point);
     vec_push(f->F, &v);
-    f->size++;
 }
 
 
 Vector *samplef_pop(SampleF *f, int pos){
-    f->size--;
     vec_remove(f->f, pos);
     return vec_pop_t(f->F, pos, Vector*);
 }
@@ -73,7 +68,7 @@ Point samplef_get(SampleF *f, int pos){
 }
 
 int samplef_len(SampleF *f){
-    return f->size;
+    return vec_len(f->f);
 }
 
 Vector *samplef_get_sample(SampleF *f){
@@ -109,6 +104,13 @@ void samplef_assign_from_array(SampleF *f, Point const *points, int n){
 
 void samplef_assign_from_vector(SampleF *f, Vector *v){
     for(int i=0; i<vec_len(v); i++){
+        Point *p = (Point*)vec_get(v, i);
+        samplef_assign_point(f, p);
+    }
+}
+
+void samplef_assign_vector_strtpos(SampleF *f, Vector *v, int pos){
+    for(int i=pos; i<vec_len(v); i++){
         Point *p = (Point*)vec_get(v, i);
         samplef_assign_point(f, p);
     }

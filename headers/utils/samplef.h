@@ -25,6 +25,11 @@ void samplef_assign_from_array(SampleF *f, Point const *points, int n);
 /** Assings points to its nearest f_k */
 void samplef_assign_from_vector(SampleF *f, Vector *v);
 
+/** Assings points to its nearest
+*   Starting at pos
+*/
+void samplef_assign_vector_strtpos(SampleF *f, Vector *v, int pos);
+
 /** Removes the f[i], and return its points */
 Vector *samplef_pop(SampleF *f, int i);
 
