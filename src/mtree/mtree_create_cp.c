@@ -7,7 +7,7 @@
 #include "../../headers/point.h"
 #include "../../headers/utils/queue.h"
 #include "../../headers/utils/samplef.h"
-#include "../../headers/utils/random_generator.h"
+#include "../../headers/utils/random.h"
 
 
 /** Agrega un array de puntos como hijos de un MTree */
