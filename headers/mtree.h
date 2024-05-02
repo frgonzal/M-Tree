@@ -23,7 +23,8 @@ typedef struct mtree {
     Point  p;           // Point coordinates
     double cr;          // Point radius
     struct mtree *a;    // Node childs
-    int n;         
+    int n;              // Number of childs
+    int h;              // Height of childs
 } MTree;
 
 /** 
