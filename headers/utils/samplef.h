@@ -3,28 +3,30 @@
 
 #include "../point.h"
 #include "queue.h"
+#include "vector.h"
 
 typedef struct sample_f SampleF;
 
-/** Init the Set */
+/** Init the samplef */
 SampleF *samplef_init(int init_size);
 
-/** Destroy the Set */
+/** Init the sampleF from an array */
+SampleF *samplef_init_from_array(Point const *points, int size);
+
+/** Destroy the SampleF */
 void samplef_destroy(SampleF *f);
 
-/** Adds a point to F */
+/** Adds a point to the sample */
 void samplef_push(SampleF *f, Point *p);
 
-/** Assings a point to its nearest f_k */
-void samplef_assign_from_array(SampleF *f, Point *p, int n);
+/** Assings points to its nearest f_k */
+void samplef_assign_from_array(SampleF *f, Point const *points, int n);
 
-/** Assings a point to its nearest f_k */
-void samplef_assign_from_queue(SampleF *f, Queue *q);
+/** Assings points to its nearest f_k */
+void samplef_assign_from_vector(SampleF *f, Vector *v);
 
-/** Removes the f[i], and return its queue of points */
-Queue *samplef_remove(SampleF *f, Point *p);
-
-Queue *samplef_pop(SampleF *f, int i);
+/** Removes the f[i], and return its points */
+Vector *samplef_pop(SampleF *f, int i);
 
 /** Returns the position of p */
 int samplef_find(SampleF *f, Point *p);
@@ -36,13 +38,10 @@ Point samplef_get(SampleF *f, int i);
 int samplef_len(SampleF *f);
 
 /** Returns the array F */
-Point const *sampef_get_sample(SampleF *f);
-
-/** Get the Queue of F_i */
-Queue *samplef_get_queue_points(SampleF *f, int i);
+Vector *sampef_get_sample(SampleF *f);
 
 /** Get the Array of F_i */
-Point *samplef_get_array_points(SampleF *f, int i);
+Vector *samplef_get_points(SampleF *f, int i);
 
 
 #endif
