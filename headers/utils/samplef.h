@@ -48,5 +48,4 @@ Vector *samplef_get_sample(SampleF *f);
 /** Get the Array of F_i */
 Vector *samplef_get_points(SampleF *f, int i);
 
-
 #endif

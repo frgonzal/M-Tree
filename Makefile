@@ -19,7 +19,8 @@ SRC = \
 	  src/mtree/mtree_create_ss.c\
 	  src/utils/vector.c\
 	  src/utils/random.c\
-	  src/utils/queue.c
+	  src/utils/queue.c\
+	  src/utils/samplef.c
 
 
 ## nombre de los headers (automatico)

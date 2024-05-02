@@ -3,9 +3,11 @@
 #include "../../headers/mtree.h"
 #include "../../headers/point.h"
 #include "../../headers/utils/vector.h"
+#include "../../headers/utils/queue.h"
 
 
 /** Search Query
+*   BFS algorithm
 *   
 *   @param mtree  MTree
 *   @param q      Search center
@@ -15,18 +17,25 @@
 *   @return Query I/Os
 */
 static int query(MTree *mtree, Point q, double r, Vector *v){
-    int n = 1;
+    int n = 0;
+    Queue *queue = q_init();
+    q_put(queue, mtree);
 
-    double dist_pq = dist(mtree->p, q);
+    while(!q_empty(queue)){
+        MTree* mtree = q_get(queue);
 
-    if(dist_pq <= r)
-        vec_push(v, &mtree->p);
-
-    if(mtree->a != NULL && dist_pq <= mtree->cr + r){
-        for(int i=0; i<mtree->n; i++)
-            n += query(mtree->a+i, q, r, v);
+        double d2 = dist2(mtree->p, q);
+        if(d2 <= r*r)
+            vec_push(v, &mtree->p);
+        
+        if(mtree->a != NULL && d2 <= (mtree->cr + r)*(mtree->cr + r)){
+            for(int i=0; i<mtree->n; i++)
+                q_put(queue, mtree->a+i);
+        }
+        n++;
     }
 
+    q_destroy(queue);
     return n;
 }
 
@@ -35,8 +44,7 @@ MTreeSearch mtree_search(MTree *mtree, Point q, double r){
     if (mtree == NULL) 
         return (MTreeSearch){NULL, 0, 0};
 
-
-    Vector *v = vec_init(128, Point);
+    Vector *v = vec_init(64, Point);
     int ios = query(mtree, q, r, v);
 
     int size = vec_len(v);

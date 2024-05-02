@@ -3,7 +3,8 @@
 
 #include "point.h"
 
-#define B 4096
+//#define B 4096
+#define B 3
 
 
 /**
