@@ -1,4 +1,3 @@
-#include <complex.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -50,6 +49,7 @@ MTree bulk_loading(Point const *points, int n){
             }
         }
 
+        k = samplef_len(F);
     } while(k == 1);
 
     Vector *T = vec_init(k, MTree);
@@ -66,13 +66,33 @@ MTree bulk_loading(Point const *points, int n){
         if(t.n < (B >> 1)){
             //, se quita esa raíz, se elimina pfj de F y se trabaja con sus subárboles como nuevos 
             // Tj , . . . , Tj+p−1, se añaden los puntos pertinentes a F.
-        }else{
+            // hijos = ...
+            // vec_push(hijos)
+        }else
             vec_push(T, &t);
-        }
     }
+    // Etapa de balanceamiento: Se define h como la altura mínima de los árboles Tj. 
+    // buscar altura minima entre los hijos
+    // Se define T' inicialmente como un conjunto vacío.
 
+    //Por cada Tj , si su altura es igual a h, se añade a T'
+    //Si no se cumple:
+        //Se borra el punto pertinente en F.
+        //Se hace una búsqueda exhaustiva en Tj de todos los subárboles T'_1, . . . ,T'_p 
+        // de altura igual a h. Se insertan estos árboles a T'
+        // Se insertan los puntos raíz de T'_1, . . .,T'_p, f1, . . . ,fp en F
 
+    // Se define T_sup == mtree como el resultado de la llamada al algoritmo CP aplicado a F
+    Vector *T_sup = samplef_get_sample(F);
+    mtree = bulk_loading((Point const *)vec_to_array(T_sup), k);
 
+    //Se une cada Tj ∈ T' a su hoja en T_sup correspondiente al punto pfj ∈ F, 
+    // obteniendo un nuevo árbol T .
+
+    //Se setean los radios cobertores resultantes para cada entrada en este árbol.
+    // ademas la altura = h_min + 1
+
+    // liberar memoria utilizada
     vec_destroy(T);
     vec_destroy(T_prima);
     samplef_destroy(F);

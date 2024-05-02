@@ -76,7 +76,7 @@ int samplef_len(SampleF *f){
     return f->size;
 }
 
-Vector *sampef_get_sample(SampleF *f){
+Vector *samplef_get_sample(SampleF *f){
     return f->f;
 }
 
