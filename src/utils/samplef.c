@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include "../../headers/utils/samplef.h"
 #include "../../headers/point.h"
 #include "../../headers/utils/queue.h"
