@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 #include "../../headers/mtree.h"
 #include "../../headers/point.h"
 #include "../../headers/utils/queue.h"
@@ -13,7 +14,13 @@
 static void add_childs(MTree *mtree, Point const *points, int n);
 
 
-MTree create_tree(Point *points, int n){
+MTree bulk_loading(Point const *points, int n){
+    // Si |P| ≤ B, se crea un árbol T , se insertan todos los puntos a T y se retorna T
+    if(n <= B){
+        MTree mtree = {points[0], 0, malloc(B*sizeof(MTree)), n, 1};
+        add_childs(&mtree, points, n);
+        return mtree;
+    }
 
 
     SampleF *F;
@@ -47,29 +54,20 @@ MTree create_tree(Point *points, int n){
 
 MTree* mtree_create_cp(Point const *points, int n){
     MTree *mtree = malloc(sizeof(MTree));
-
-    // Si |P| ≤ B, se crea un árbol T , se insertan todos los puntos a T y se retorna T
-    if(n <= B){
-        *mtree = (MTree){points[0], 0, malloc(B*sizeof(MTree)), n-1};
-        add_childs(mtree, points+1, n-1);
-        return mtree;
-    }
-
-    *mtree = create_tree(points, n);
+    *mtree = bulk_loading(points, n);
     return mtree;
 }
 
 
 /** Agrega hijos a un nodo MTree */
 static void add_childs(MTree *mtree, Point const *points, int n){
-    double max_dist = 0;
+    double max_dist2 = 0;
 
     for(int i=0; i<n; i++){
-        double dist_pq = dist(mtree->p, points[i]);
-        max_dist = dist_pq > max_dist ? dist_pq : max_dist;
+        double d2 = dist2(mtree->p, points[i]);
+        max_dist2 = d2 > max_dist2 ? d2 : max_dist2;
 
-        (mtree->a)[i] = (MTree){points[i], 0, NULL, 0};
+        (mtree->a)[i] = (MTree){points[i], 0, NULL, 0, 0};
     }
-    mtree->cr = max_dist; 
-
+    mtree->cr = sqrt(max_dist2); 
 }
