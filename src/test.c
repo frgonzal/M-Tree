@@ -3,7 +3,7 @@
 #include <time.h>
 #include <unistd.h>
 #include "../headers/point.h"
-#include "../headers/utils/random_generator.h"
+#include "../headers/utils/random.h"
 #include "../headers/utils/vector.h"
 
 #define MAX 33554432

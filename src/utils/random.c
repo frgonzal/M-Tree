@@ -3,7 +3,7 @@
 #include <time.h>
 #include <string.h>
 #include "../../headers/point.h"
-#include "../../headers/utils/random_generator.h"
+#include "../../headers/utils/random.h"
 
 
 /** Genera un Punto con coordenadas aleatorias
@@ -31,7 +31,7 @@ Point* random_sample_generator(int sample_size){
 }
 
 
-Point* random_k_sample(Point *arr, int n, int k){
+Point* random_k_sample(Point const *arr, int n, int k){
     srand(time(NULL));
     Point *sample = malloc(n*sizeof(Point));
     memcpy(sample, arr, n*sizeof(Point));

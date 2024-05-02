@@ -1,5 +1,5 @@
-#ifndef RANDOM_GENERATOR_H
-#define RANDOM_GENERATOR_H
+#ifndef RANDOM_H
+#define RANDOM_H
 
 #include "../point.h"
 
@@ -13,6 +13,6 @@ Point* random_sample_generator(int sample_size);
 /** Returns an array of k random elements
 *   from an array of size n
 */
-Point* random_k_sample(Point *arr, int n, int k);
+Point* random_k_sample(Point const *arr, int n, int k);
 
 #endif

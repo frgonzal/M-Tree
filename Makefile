@@ -18,7 +18,7 @@ SRC = \
 	  src/mtree/mtree_create_cp.c\
 	  src/mtree/mtree_create_ss.c\
 	  src/utils/vector.c\
-	  src/utils/random_generator.c\
+	  src/utils/random.c\
 	  src/utils/queue.c
 
 
