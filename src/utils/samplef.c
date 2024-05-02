@@ -90,18 +90,28 @@ Point *samplef_get_array_points(SampleF *f, int pos){
 
 static void samplef_assign_point(SampleF *f, Point *p){
     double min_dist2 = 1e5;
-    Point const *points = vec_to_array(f->f)
+    int k = -1;
+    Point const *points = vec_to_array(f->f);
     for(int i=0; i<f->size; i++){
-
-
+        double d2 = dist2(*p, points[i]);
+        if(d2 < min_dist2){
+            k = i;
+            min_dist2 = d2;
+        }
     }
-    //Queue *q = samplef_get_queue_points(f, pos);
+    Queue *q = samplef_get_queue_points(f, k);
+    q_put(q, p);
 }
 
-void samplef_assign_from_array(SampleF *f, Point *p, int n){
-    return;
+void samplef_assign_from_array(SampleF *f, Point *points, int n){
+    for(int i=0; i<n; i++){
+        samplef_assign_point(f, points+i);
+    }
 }
 
 void samplef_assign_from_queue(SampleF *f, Queue *q){
-    return;
+    while(!q_empty(q)){
+        Point *p = (Point*)q_get(q);
+        samplef_assign_point(f, p);
+    }
 }

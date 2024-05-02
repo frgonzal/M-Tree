@@ -5,6 +5,8 @@
 #include "../../headers/mtree.h"
 #include "../../headers/point.h"
 #include "../../headers/utils/queue.h"
+#include "../../headers/utils/samplef.h"
+#include "../../headers/utils/random_generator.h"
 
 
 typedef struct {
@@ -12,30 +14,9 @@ typedef struct {
     int h;
 } Tree;
 
-typedef struct {
-    Point *f;
-    Queue **points;
-    int size;
-    int max_size;
-} SampleF;
-
-
-/** Entrega un puntero a un array con k puntos randoms del array original.
-*   Tambien modifica el array original, dejandolo solo con aquellos puntos
-*   que no fueron seleccionados, ademas reduce el n en k.
-*
-*   @param points array of points
-*   @param n      number of points
-*   @param k      length of sample
-*/
-static SampleF *random_sample_k(Point *points, int n, int k);
 
 /** Agrega un array de puntos como hijos de un MTree */
 static void add_childs(MTree *mtree, Point *points, int n);
-
-static void assign_to_f(SampleF *F, Point *points, int n);
-
-static int redistribute(SampleF *F, int k);
 
 MTree create_tree(Point *points, int n){
 
@@ -45,14 +26,15 @@ MTree create_tree(Point *points, int n){
     do{
         // De manera aleatoria se eligen k = min(B, n/B) puntos de P, que los llamaremos samples pf1 , . . . , pfk . 
         // Se insertan en un conjunto F de samples.
-        F = random_sample_k(points, n, k);
+        Point *sample_k = random_k_sample(points, n, k);
+        //F = samplef_init();
 
         // Se le asigna a cada punto en P su sample más cercano. Con eso se puede construir k conjuntos
         // F1, . . . , Fk 
-        assign_to_f(F, points, n);
+        
 
         // Etapa de redistribución: Si algún Fj es tal que |Fj| < b:
-        k = redistribute(F, k);
+        //k = redistribute(F, k);
 
     } while(k == 1);
 
@@ -109,45 +91,4 @@ static void add_childs(MTree *mtree, Point *points, int n){
     }
     mtree->cr = max_dist; 
 
-}
-
-
-/** Selecciona k puntos random de un array */
-static SampleF *random_sample_k(Point *points, int n, int k) {
-    srand(time(NULL));
-
-    int max_size = 1;
-    while(k > max_size)
-        max_size <<= 1;
-
-    
-    SampleF *F = malloc(sizeof(SampleF));
-    *F = (SampleF) {
-        malloc(max_size*sizeof(Point)), 
-        malloc(max_size*sizeof(Queue*)), 
-        k, 
-        max_size
-    };
-
-    for(int i=0; i<k; i++) {
-        int j = rand() % (n-i);
-        swap_points(points+i, points+j+i);
-    }
-
-    for(int i=0; i<k; i++){
-        *(F->f+i) = points[i];
-    }
-
-    return F;
-}
-
-static void assign_to_f(SampleF *F, Point *points, int n){
-
-    return;
-}
-
-
-static int redistribute(SampleF *F, int k){
-
-    return 0;
 }
