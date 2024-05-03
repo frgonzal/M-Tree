@@ -8,9 +8,7 @@
 //#define B 4096
 #define B 3
 
-
-/**
-*   @struct MTree
+/** @class MTree
 *   
 *   Un M-Tree es un árbol que está compuesto de nodos 
 *   que contiene entradas (p, cr, a), donde p es un 
@@ -22,13 +20,19 @@
 *   interno. Si el nodo corresponde a una hoja, por 
 *   simplicidad asumiremos cr y a nulos. 
 */
-typedef struct mtree {
-    Point  p;           // Point coordinates
-    double cr;          // Point radius
-    struct mtree *a;    // Node childs
-    int n;              // Number of childs
-    int h;              // Height of childs
-} MTree;
+class MTree{
+    public:
+        Point p;
+        double cr;
+        std::vector<MTree> a;
+        int h;
+
+        MTree();
+        MTree(Point point, double radius, int height);
+        ~MTree(); 
+        void add_child(Point point);
+};
+
 
 /** Search Query
 *   
@@ -56,13 +60,5 @@ MTree* mtree_create_cp(const std::vector<Point> &points);
 *   @param n      tamaño del array
 */
 MTree* mtree_create_ss(const std::vector<Point> &points);
-
-
-/** Free MTree memory
-*
-*   @param mtree
-*/
-void mtree_destroy(MTree *mtree);
-
 
 #endif

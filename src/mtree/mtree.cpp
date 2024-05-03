@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <tuple>
 #include <vector>
@@ -7,6 +6,13 @@
 #include "vector"
 #include "queue"
 
+MTree::MTree(Point point, double radius, int height)
+    : p(point), cr(radius), h(height), a(std::vector<MTree>()){}
+MTree::MTree(){}
+MTree::~MTree(){}
+void MTree::add_child(Point p){
+    a.push_back(MTree(p, 0, 0));
+}
 
 /** Search Query
 *   BFS algorithm
@@ -31,9 +37,9 @@ static int query(MTree *mtree, Point q, double r, std::vector<Point> &v){
         if(d2 <= r*r)
             v.push_back(mtree->p);
         
-        if(mtree->a != NULL && d2 <= (mtree->cr + r)*(mtree->cr + r)){
-            for(int i=0; i<mtree->n; i++)
-                queue.push(mtree->a+i);
+        if(mtree->a.size() > 0 && d2 <= (mtree->cr + r)*(mtree->cr + r)){
+            for(int i=0; i<mtree->a.size(); i++)
+                queue.push(&(mtree->a)[i]);
         }
         n++;
     }
@@ -50,23 +56,4 @@ std::tuple<std::vector<Point>,int> mtree_search(MTree *mtree, Point q, double r)
     int ios = query(mtree, q, r, v);
 
     return std::make_tuple(v, ios);
-}
-
-
-/** Destroy a node */
-static void destroy_node(MTree *mtree){
-    if (mtree == NULL) return;
-
-    if(mtree->a != NULL){
-        for(int i=0; i<mtree->n; i++)
-            destroy_node((mtree->a)+i);
-
-        free(mtree->a);
-    }
-}
-
-
-void mtree_destroy(MTree *mtree){
-    destroy_node(mtree);
-    free(mtree);
 }
