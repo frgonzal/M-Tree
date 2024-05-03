@@ -1,10 +1,10 @@
-CC = gcc
+CC = g++
 
 ## agregar flags? como -g o -Wall
-CFLAGS = -g -Wall
+CFLAGS =
 
 ## agregar librerias extra
-LDLIBS= -lm
+LDLIBS=
 
 TARGET=./build/main
 TEST=./build/test
@@ -13,20 +13,20 @@ TEST=./build/test
 ## excepto main y test
 ## agregar un "\" al final de cada nombre
 SRC = \
-	  src/mtree/point.c\
-	  src/mtree/mtree.c\
-	  src/mtree/mtree_create_cp.c\
-	  src/mtree/mtree_create_ss.c\
-	  src/utils/vector.c\
-	  src/utils/random.c\
-	  src/utils/queue.c\
-	  src/utils/samplef.c
+	  src/mtree/point.cpp\
+	  src/mtree/mtree.cpp\
+	  src/mtree/mtree_create_cp.cpp\
+	  src/mtree/mtree_create_ss.cpp\
+	  src/utils/vector.cpp\
+	  src/utils/random.cpp\
+	  src/utils/queue.cpp\
+	  src/utils/samplef.cpp
 
 
 ## nombre de los headers (automatico)
-HDRS = $(wildcard headers/*.h)
+HDRS = $(wildcard headers/*.hpp)
 ## nombre de los .o (automatico)
-OBJS = $(SRC:./src/%.c=./build/%.o)
+OBJS = $(SRC:./src/%.cpp=./build/%.o)
 
 
 
@@ -36,11 +36,11 @@ all:
 	@echo " use \"make help\" to get more info"
 
 ## Compila un .o a partir del src
-./build/%.o: ./src/*/%.c $(HDRS)
+./build/%.o: ./src/*/%.cpp $(HDRS)
 	@ $(CC) $(CFLAGS)  -c $< -o $@
 
 ## Compila un .o a partir del src
-./build/%.o: ./src/%.c $(HDRS)
+./build/%.o: ./src/%.cpp $(HDRS)
 	@ $(CC) $(CFLAGS)  -c $< -o $@
 
 ## Compila el ejecutable del main y ejecuta

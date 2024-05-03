@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
-#include "../headers/point.h"
-#include "../headers/mtree.h"
-#include "../headers/utils/random.h"
-#include "../headers/utils/queue.h"
-#include "../headers/utils/vector.h"
-#include "../headers/utils/samplef.h"
+#include "../headers/point.hpp"
+#include "../headers/mtree.hpp"
+#include "../headers/utils/random.hpp"
+#include "../headers/utils/queue.hpp"
+#include "../headers/utils/vector.hpp"
+#include "../headers/utils/samplef.hpp"
 
 //#define MAX 33554432
 #define MAX 33554

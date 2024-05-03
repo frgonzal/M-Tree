@@ -1,5 +1,5 @@
 #include <math.h>
-#include "../../headers/point.h"
+#include "../../headers/point.hpp"
 
 
 double dist(Point p1, Point p2){

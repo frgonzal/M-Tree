@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../headers/mtree.h"
-#include "../../headers/point.h"
-#include "../../headers/utils/vector.h"
-#include "../../headers/utils/queue.h"
+#include <tuple>
+#include <vector>
+#include "../../headers/mtree.hpp"
+#include "../../headers/point.hpp"
+#include "vector"
+#include "queue"
 
 
 /** Search Query
@@ -16,41 +18,38 @@
 *   
 *   @return Query I/Os
 */
-static int query(MTree *mtree, Point q, double r, Vector *v){
+static int query(MTree *mtree, Point q, double r, std::vector<Point> &v){
     int n = 0;
-    Queue *queue = q_init();
-    q_put(queue, mtree);
+    std::queue<MTree*> queue;
+    queue.push(mtree);
 
-    while(!q_empty(queue)){
-        MTree* mtree = q_get(queue);
+    while(!queue.empty()){
+        MTree* mtree = queue.front();
+        queue.pop();
 
         double d2 = dist2(mtree->p, q);
         if(d2 <= r*r)
-            vec_push(v, &mtree->p);
+            v.push_back(mtree->p);
         
         if(mtree->a != NULL && d2 <= (mtree->cr + r)*(mtree->cr + r)){
             for(int i=0; i<mtree->n; i++)
-                q_put(queue, mtree->a+i);
+                queue.push(mtree->a+i);
         }
         n++;
     }
 
-    q_destroy(queue);
     return n;
 }
 
 
-MTreeSearch mtree_search(MTree *mtree, Point q, double r){
-    if (mtree == NULL) 
-        return (MTreeSearch){NULL, 0, 0};
+std::tuple<std::vector<Point>,int> mtree_search(MTree *mtree, Point q, double r){
+    std::vector<Point> v(0);
+    if(mtree == nullptr)
+        return std::make_tuple(v, 0);
 
-    Vector *v = vec_init(64, Point);
     int ios = query(mtree, q, r, v);
 
-    int size = vec_len(v);
-    Point *points = vec_to_array_and_destroy(v);
-
-    return (MTreeSearch){points,size,ios};
+    return std::make_tuple(v, ios);
 }
 
 

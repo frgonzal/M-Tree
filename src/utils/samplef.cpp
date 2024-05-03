@@ -1,8 +1,8 @@
 #include <stdlib.h>
-#include "../../headers/utils/samplef.h"
-#include "../../headers/point.h"
-#include "../../headers/utils/queue.h"
-#include "../../headers/utils/vector.h"
+#include "../../headers/utils/samplef.hpp"
+#include "../../headers/point.hpp"
+#include "../../headers/utils/queue.hpp"
+#include "../../headers/utils/vector.hpp"
 
 struct sample_f {
     Vector *f;

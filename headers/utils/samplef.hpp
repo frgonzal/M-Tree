@@ -1,9 +1,8 @@
-#ifndef SAMPLEF_H
-#define SAMPLEF_H
+#ifndef SAMPLEF_HPP
+#define SAMPLEF_HPP
 
-#include "../point.h"
-#include "queue.h"
-#include "vector.h"
+#include "../point.hpp"
+#include "vector.hpp"
 
 typedef struct sample_f SampleF;
 

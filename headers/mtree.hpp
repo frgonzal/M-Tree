@@ -1,7 +1,9 @@
-#ifndef MTREE_H
-#define MTREE_H
+#ifndef MTREE_HPP
+#define MTREE_HPP
 
-#include "point.h"
+#include "point.hpp"
+#include <vector>
+#include <tuple>
 
 //#define B 4096
 #define B 3
@@ -28,19 +30,6 @@ typedef struct mtree {
     int h;              // Height of childs
 } MTree;
 
-/** 
-*   @struct MTreeSearch
-*
-*   Contains an array of points of the result
-*   and the IO's of the search.
-*/
-typedef struct {
-    Point *points;      // Search result
-    int result_size;    // Array size
-    int ios;            // Input/Ouput's
-} MTreeSearch;
-
-
 /** Search Query
 *   
 *   @param mtree Puntero a un nodo del MTree
@@ -50,7 +39,7 @@ typedef struct {
 *   @return Returns a struct with the result
 *               {points, size, IO's}
 */
-MTreeSearch mtree_search(MTree *mtree, Point q, double r);
+std::tuple<std::vector<Point>, int> mtree_search(MTree *mtree, Point q, double r);
 
 
 /** Método Ciaccia-Patella
@@ -58,7 +47,7 @@ MTreeSearch mtree_search(MTree *mtree, Point q, double r);
 *   @param points array de puntos
 *   @param n      tamaño del array
 */
-MTree* mtree_create_cp(Point const *points, int n);
+MTree* mtree_create_cp(const std::vector<Point> &points);
 
 
 /** Método Sexton-Swinbank 
@@ -66,7 +55,7 @@ MTree* mtree_create_cp(Point const *points, int n);
 *   @param points array de puntos
 *   @param n      tamaño del array
 */
-MTree* mtree_create_ss(Point const *points, int n);
+MTree* mtree_create_ss(const std::vector<Point> &points);
 
 
 /** Free MTree memory

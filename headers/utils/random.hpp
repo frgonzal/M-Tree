@@ -1,19 +1,20 @@
-#ifndef RANDOM_H
-#define RANDOM_H
+#ifndef RANDOM_HPP
+#define RANDOM_HPP
 
-#include "../point.h"
+#include "../point.hpp"
+#include <vector>
 
 /** Genera un array de puntos
 *   Los puntos tienen coordenadas con valores entre 0 y 1
 *   
 *   @param sample_size     El numero de puntos a generar
 */
-Point* random_sample_generator(int sample_size);
+std::vector<Point> random_sample_generator(int sample_size);
 
 /** Returns an array of k random elements
 *   from an array of size n
 */
-Point* random_k_sample(Point const *arr, int n, int k);
+std::vector<Point> random_k_sample(std::vector<Point> points, int k);
 
 void random_seed();
 
