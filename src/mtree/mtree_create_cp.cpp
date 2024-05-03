@@ -7,60 +7,21 @@
 #include "../../headers/utils/random.hpp"
 
 
-int variable_estatica = 0;
-
-#include <stdio.h>
-static void printf_vector(const std::vector<Point> &points){
-    printf("[");
-    for(int i=0; i<points.size(); i++){
-        printf("(%.2f, %.2f)",points[i].x, points[i].y);
-        if(i < points.size()-1)
-            printf(", ");
-    }
-    printf("]\n");
-}
-static void printf_mtree(MTree *raiz){
-    printf("\nMTree:\n");
-    std::queue<MTree*> q;
-    std::vector<std::vector<MTree*>> niveles(raiz->h+1);
-    q.push(raiz);
-
-    while(!q.empty()){
-        MTree* mtree = q.front();
-        q.pop();
-        niveles[mtree->h].push_back(mtree);
-
-        for(int i=0; i<mtree->a.size(); i++){
-            q.push(&mtree->a[i]);
-        }
-    }
-
-    for(int i=niveles.size()-1; i>=0; i--){
-        printf("\t-- Nivel %d --\n", i);
-        for(int j=0; j<niveles[i].size(); j++){
-
-            MTree *mtree = niveles[i][j];
-            printf("p:(%.2f, %.2f),h:%d,n:%ld,cr:%1.2f;\n",mtree->p.x, mtree->p.y, mtree->h, mtree->a.size(), mtree->cr);
-        }
-    }
-    printf("\n");
-}
 
 static void assign_to_nearest(std::vector<Point> &f, std::vector<std::vector<Point>> &F, const std::vector<Point> &points);
 
 static void redistribution(std::vector<Point> &f, std::vector<std::vector<Point>> &F);
 
-static void update_radius(MTree *mtree, int h);
+static void update_radius(MTree *mtree);
 
 static void append_to_leaf(MTree *mtree, MTree child, Point p);
 
 static std::vector<MTree> find_mtree_h(MTree *mtree, int h);
 
+static void set_radius(MTree *mtree);
 
 /** The bulk_loading algorithm */
 MTree bulk_loading(const std::vector<Point> &points){
-    int ticket = variable_estatica++;
-
     // Si |P| ≤ B, se crea un árbol T , se insertan todos los puntos a T y se retorna T
     if(points.size() <= B){
         MTree mtree = MTree(points[0]);
@@ -68,7 +29,6 @@ MTree bulk_loading(const std::vector<Point> &points){
             mtree.add_child(MTree(points[i]));
         return mtree;
     }
-
 
     std::vector<Point> f;
     std::vector<std::vector<Point>> F;
@@ -90,7 +50,7 @@ MTree bulk_loading(const std::vector<Point> &points){
 
         k = f.size();
 
-        if(k > 1)
+        if(k > 1) 
             break;
 
         f.clear();
@@ -121,18 +81,12 @@ MTree bulk_loading(const std::vector<Point> &points){
     f.shrink_to_fit();
     f = f2;
 
-
     // Etapa de balanceamiento: Se define h como la altura mínima de los árboles Tj. 
     int min_h = 1e8;
-
     // buscar altura minima entre los hijos
-    for(int i=0; i<T.size(); i++){
+    for(int i=0; i<T.size(); i++)
         min_h = T[i].h < min_h ? T[i].h : min_h;
-    }
     
-    if(ticket == 0){
-        printf_vector(f);
-    }
     // Se define T' inicialmente como un conjunto vacío.
     std::vector<MTree> T_prima(0);
     f2 = std::vector<Point>(0);
@@ -156,28 +110,22 @@ MTree bulk_loading(const std::vector<Point> &points){
             }
         }
     }
-    f.clear();
+    f.clear(); 
     f.shrink_to_fit();
     f = f2;
-
-    if(ticket == 0){
-        for(int i=0; i<T_prima.size(); i++)
-            printf_mtree(&T_prima[i]);
-        printf_vector(f);
-    }
 
     // Se define T_sup == mtree como el resultado de la llamada al algoritmo CP aplicado a F
     MTree mtree = bulk_loading(f);
     int h = mtree.h;
+    set_radius(&mtree);
 
     //Se une cada Tj ∈ T' a su hoja en T_sup correspondiente al punto pfj ∈ F, 
     // obteniendo un nuevo árbol T .
-    for(int i=0; i<T_prima.size(); i++){
+    for(int i=0; i<T_prima.size(); i++)
         append_to_leaf(&mtree, T_prima[i], f[i]);
-    }
 
     //Se setean los radios cobertores resultantes para cada entrada en este árbol.
-    update_radius(&mtree, h);
+    update_radius(&mtree);
 
     return mtree;
 }
@@ -188,6 +136,7 @@ MTree* mtree_create_cp(const std::vector<Point> &points){
     *mtree = bulk_loading(points);
     return mtree;
 }
+
 
 /** Assigns points to their neares sample */
 static void assign_to_nearest(std::vector<Point> &f, std::vector<std::vector<Point>> &F, const std::vector<Point> &points){
@@ -221,25 +170,41 @@ static void redistribution(std::vector<Point> &f, std::vector<std::vector<Point>
     }
 }
 
+
 /** Updated radius and height of an mtree */
-static void update_radius(MTree *mtree, int h){
-    if(mtree->h <= 0)
+static void update_radius(MTree *root){
+    if(root->cr != 0)
         return;
 
-    for(int i=0; i<mtree->a.size(); i++)
-        update_radius(&mtree->a[i], h-1);
+    for(int i=0; i<root->a.size(); i++)
+        update_radius(&root->a[i]);
 
+    std::queue<MTree*> q;
+    q.push(root);
 
     double max_d2 = 0;
     int max_h = 0;
-    for(int i=0; i<mtree->a.size(); i++){
-        double d2 = dist2(mtree->p, mtree->a[i].p);
-        max_d2 = d2 > max_d2 ? d2 : max_d2;
-        max_h = mtree->a[i].h > max_h ? mtree->a[i].h : max_h;
+
+    while(!q.empty()){
+        MTree *leaf = q.front();
+        q.pop();
+
+        if(leaf->cr == 0 && leaf->a.size() == 0 && leaf->h == 0){// leafs
+            double d2 = dist2(root->p, leaf->p);
+            max_d2 = d2 > max_d2 ? d2 : max_d2;
+            max_h = leaf->h > max_h ? leaf->h : max_h;
+        }
+
+        for(int i=0; i<leaf->a.size(); i++){
+            q.push(&leaf->a[i]);
+        }
+
+        root->h = max_h + 1;
+        root->cr = sqrt(max_d2);
     }
-    mtree->h = max_h + 1;
-    mtree->cr = sqrt(max_d2);
+
 }
+
 
 /** Returns a vector with all the sub Trees that have height == h*/
 static std::vector<MTree> find_mtree_h(MTree *mtree, int h){
@@ -264,6 +229,7 @@ static std::vector<MTree> find_mtree_h(MTree *mtree, int h){
     return mtrees_h;
 }
 
+
 /** BFS para encontra la hoja */
 static void append_to_leaf(MTree *root, MTree child, Point p){
     std::queue<MTree*> q;
@@ -277,6 +243,23 @@ static void append_to_leaf(MTree *root, MTree child, Point p){
             *mtree = child;
             return;
         }
+        for(int i=0; i<mtree->a.size(); i++){
+            q.push(&mtree->a[i]);
+        }
+    }
+}
+
+/** Set all cr to 0, to later remember wich one were from the T_sup */
+static void set_radius(MTree *root){
+    std::queue<MTree*> q;
+    q.push(root);
+
+    while(!q.empty()){
+        MTree *mtree = q.front();
+        q.pop();
+
+        mtree->cr = 0;
+
         for(int i=0; i<mtree->a.size(); i++){
             q.push(&mtree->a[i]);
         }

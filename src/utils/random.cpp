@@ -9,37 +9,45 @@
 #include <random>
 #include <algorithm>
 
-std::mt19937 gen;
-int random_init = 0;
+/** Random generator */
+static std::mt19937 gen;
 
-/** Genera un Punto con coordenadas aleatorias
-*   Las coordenadas estan en [0, 1]
-*   
-*   @return Point(x, y)
-*/
-static Point random_point(void){
+/** To initialize the random seed */
+static void init_random(){
+    static int random_init = 0;
+    if(!random_init){
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        srand(rd());
+    }
+}
+
+
+Point random_point(void){
+    init_random();
+
     double x  = (double) rand() / (double) (RAND_MAX-1);
     double y  = (double) rand() / (double) (RAND_MAX-1);
-
     return (Point){x, y};
 }
 
 
 std::vector<Point> random_sample_generator(int size){
+    init_random();
     std::vector<Point> points(size); // Create vector
 
-    for(int i=0; i<size; i++)
-        points[i] = random_point();
+    for(int i=0; i<size; i++){
+        double x  = (double) rand() / (double) (RAND_MAX-1);
+        double y  = (double) rand() / (double) (RAND_MAX-1);
+        points[i] = (Point){x, y};
+    }
 
     return points;
 }
 
 
 std::vector<Point> random_k_sample(std::vector<Point> points, int k){
-    if(!random_init){
-        std::random_device rd;
-        std::mt19937 gen(rd());
-    }
+    init_random();
 
     std::shuffle(points.begin(), points.end(), gen);
     std::vector<Point> selected_elements(points.begin(), points.begin() + k);

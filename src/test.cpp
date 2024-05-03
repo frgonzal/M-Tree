@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -77,27 +78,23 @@ void random_test(int n, int k, int m){
 }
 
 
-void mtree_cp_test(int n){
-    printf("\n\tMetodo CP \n");
+void mtree_cp_test(int size, int querys){
+    printf("\nMetodo CP \n");
     MTree* mtree;
-    std::vector<Point> points = random_sample_generator(n);
+    std::vector<Point> points = random_sample_generator(size);
 
-    printf("Creando MTree...\n");
+    printf("Creando MTree de %d elementos\n", size);
     mtree = mtree_create_cp(points);
-
-    printf("points:\n");
-    printf_vector(points);
-
-    printf(" MTree:\n");
     printf_mtree(mtree);
 
-    printf("\n- Search for all elements\n");
-    {
-        Point q = {0.5, 0.5};
-        double r = 0.5;
+    printf("\tMTree (h=%d):\n", mtree->h);
+
+    printf("\n=== Search Query ===\n");
+    while(querys--){
+        Point q = random_point();
+        double r = 0.02;
         std::tuple<std::vector<Point>, int> ms = mtree_search(mtree, q, r);
-        printf("\nI/Os: %d\n", std::get<1>(ms));
-        //printf_array();
+        printf("\tPoint: (%.5f, %.5f), I/Os: %d\n", q.x, q.y, std::get<1>(ms));
     }
 
     delete mtree;
@@ -108,6 +105,6 @@ int main(){
     srand(time(NULL));
     printf("\t=====  TEST  =====\n");
 
-
-    mtree_cp_test(1000);
+    int size = (1 << 8);
+    mtree_cp_test(size, 1);
 }

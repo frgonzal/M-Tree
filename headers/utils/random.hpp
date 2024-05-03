@@ -4,6 +4,14 @@
 #include "../point.hpp"
 #include <vector>
 
+
+/** Genera un Punto con coordenadas aleatorias
+*   Las coordenadas estan en [0, 1]
+*   
+*   @return Point(x, y)
+*/
+Point random_point(void);
+
 /** Genera un array de puntos
 *   Los puntos tienen coordenadas con valores entre 0 y 1
 *   
