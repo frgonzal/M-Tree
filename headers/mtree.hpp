@@ -5,8 +5,7 @@
 #include <vector>
 #include <tuple>
 
-//#define B 4096
-#define B 20
+#define B 4096
 
 /** @class MTree
 *   

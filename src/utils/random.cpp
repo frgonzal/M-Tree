@@ -1,8 +1,5 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
-#include <time.h>
-#include <string.h>
 #include "../../headers/point.hpp"
 #include "../../headers/utils/random.hpp"
 #include <vector>

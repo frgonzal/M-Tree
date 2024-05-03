@@ -9,6 +9,10 @@
 #include "../headers/mtree.hpp"
 #include "../headers/utils/random.hpp"
 
+#include <fstream>
+#include <iostream>
+#include <sstream> // Include for ostringstream
+#include <ctime>
 
 //#define MAX 33554432
 #define MAX 33554
@@ -32,7 +36,11 @@ static void printf_vector(const std::vector<Point> &points){
     printf("]\n");
 }
 
-static void printf_mtree(MTree *raiz){
+static void printf_mtree(MTree *raiz, int size){
+    std::ostringstream fileName;
+    fileName << "./resultados/mtree_cp_" << size << ".csv";
+    std::ofstream outFile(fileName.str());
+
     std::queue<MTree*> q;
     std::vector<std::vector<MTree*>> niveles(raiz->h+1);
     q.push(raiz);
@@ -48,13 +56,21 @@ static void printf_mtree(MTree *raiz){
     }
 
     for(int i=niveles.size()-1; i>=0; i--){
-        printf("\t-- Nivel %d --\n", i);
+        //printf("\t-- Nivel %d --\n", i);
         for(int j=0; j<niveles[i].size(); j++){
 
             MTree *mtree = niveles[i][j];
-            printf("p:(%.2f, %.2f),h:%d,n:%ld,cr:%1.2f;\n",mtree->p.x, mtree->p.y, mtree->h, mtree->a.size(), mtree->cr);
+            //printf("p:(%.20f, %.20f),h:%d,n:%ld,cr:%1.20f;\n",mtree->p.x, mtree->p.y, mtree->h, mtree->a.size(), mtree->cr);
+            outFile << "p:(" << mtree->p.x 
+                    << ","   << mtree->p.y 
+                    <<"),h:" << mtree->h
+                    <<",n:"  << mtree->a.size()
+                    <<",cr:" << mtree->cr
+                    <<";\n";
         }
     }
+
+    outFile.close();
 }
 
 
@@ -85,7 +101,7 @@ void mtree_cp_test(int size, int querys){
 
     printf("Creando MTree de %d elementos\n", size);
     mtree = mtree_create_cp(points);
-    printf_mtree(mtree);
+    printf_mtree(mtree, size);
 
     printf("\tMTree (h=%d):\n", mtree->h);
 
@@ -105,6 +121,6 @@ int main(){
     srand(time(NULL));
     printf("\t=====  TEST  =====\n");
 
-    int size = (1 << 8);
+    int size = (1 << 10);
     mtree_cp_test(size, 1);
 }

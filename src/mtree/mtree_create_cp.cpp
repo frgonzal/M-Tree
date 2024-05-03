@@ -179,12 +179,15 @@ static void update_radius(MTree *root){
     for(int i=0; i<root->a.size(); i++)
         update_radius(&root->a[i]);
 
+    int max_h = 0;
+    for(int i=0; i<root->a.size(); i++)
+        max_h = root->a[i].h > max_h ? root->a[i].h : max_h;
+    root->h = max_h + 1;
+
     std::queue<MTree*> q;
     q.push(root);
 
     double max_d2 = 0;
-    int max_h = 0;
-
     while(!q.empty()){
         MTree *leaf = q.front();
         q.pop();
@@ -192,17 +195,13 @@ static void update_radius(MTree *root){
         if(leaf->cr == 0 && leaf->a.size() == 0 && leaf->h == 0){// leafs
             double d2 = dist2(root->p, leaf->p);
             max_d2 = d2 > max_d2 ? d2 : max_d2;
-            max_h = leaf->h > max_h ? leaf->h : max_h;
         }
 
-        for(int i=0; i<leaf->a.size(); i++){
+        for(int i=0; i<leaf->a.size(); i++){// childs
             q.push(&leaf->a[i]);
         }
-
-        root->h = max_h + 1;
-        root->cr = sqrt(max_d2);
     }
-
+    root->cr = sqrt(max_d2);
 }
 
 
