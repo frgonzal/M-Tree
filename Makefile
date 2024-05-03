@@ -17,10 +17,7 @@ SRC = \
 	  src/mtree/mtree.cpp\
 	  src/mtree/mtree_create_cp.cpp\
 	  src/mtree/mtree_create_ss.cpp\
-	  src/utils/vector.cpp\
-	  src/utils/random.cpp\
-	  src/utils/queue.cpp\
-	  src/utils/samplef.cpp
+	  src/utils/random.cpp
 
 
 ## nombre de los headers (automatico)

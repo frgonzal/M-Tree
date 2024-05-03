@@ -9,6 +9,8 @@
 #include <random>
 #include <algorithm>
 
+std::mt19937 gen;
+int random_init = 0;
 
 /** Genera un Punto con coordenadas aleatorias
 *   Las coordenadas estan en [0, 1]
@@ -34,13 +36,13 @@ std::vector<Point> random_sample_generator(int size){
 
 
 std::vector<Point> random_k_sample(std::vector<Point> points, int k){
-    std::vector<Point> sample(k);
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    if(!random_init){
+        std::random_device rd;
+        std::mt19937 gen(rd());
+    }
 
     std::shuffle(points.begin(), points.end(), gen);
-    std::vector<int> selected_elements(points.begin(), points.begin() + k);
+    std::vector<Point> selected_elements(points.begin(), points.begin() + k);
 
-    return sample;
+    return selected_elements;
 }

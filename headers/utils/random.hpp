@@ -16,6 +16,4 @@ std::vector<Point> random_sample_generator(int sample_size);
 */
 std::vector<Point> random_k_sample(std::vector<Point> points, int k);
 
-void random_seed();
-
 #endif

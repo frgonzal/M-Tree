@@ -6,7 +6,7 @@
 #include <tuple>
 
 //#define B 4096
-#define B 3
+#define B 20
 
 /** @class MTree
 *   
@@ -28,9 +28,9 @@ class MTree{
         int h;
 
         MTree();
-        MTree(Point point, double radius, int height);
+        MTree(Point point);
         ~MTree(); 
-        void add_child(Point point);
+        void add_child(MTree child);
 };
 
 

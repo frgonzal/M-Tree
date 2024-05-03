@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <cmath>
 #include <tuple>
 #include <vector>
 #include "../../headers/mtree.hpp"
@@ -6,13 +7,23 @@
 #include "vector"
 #include "queue"
 
-MTree::MTree(Point point, double radius, int height)
-    : p(point), cr(radius), h(height), a(std::vector<MTree>()){}
+
+MTree::MTree(Point point) : p(point), cr(0), h(0), a(std::vector<MTree>(0)){}
+
 MTree::MTree(){}
+
 MTree::~MTree(){}
-void MTree::add_child(Point p){
-    a.push_back(MTree(p, 0, 0));
+
+void MTree::add_child(MTree child){
+    a.push_back(child);
+
+    double d2 = dist2(p, child.p);
+    if(d2 > cr*cr)
+        cr = sqrt(d2);
+    if(child.h >= h)
+        h = child.h + 1;
 }
+
 
 /** Search Query
 *   BFS algorithm
@@ -48,7 +59,7 @@ static int query(MTree *mtree, Point q, double r, std::vector<Point> &v){
 }
 
 
-std::tuple<std::vector<Point>,int> mtree_search(MTree *mtree, Point q, double r){
+std::tuple<std::vector<Point>, int> mtree_search(MTree *mtree, Point q, double r){
     std::vector<Point> v(0);
     if(mtree == nullptr)
         return std::make_tuple(v, 0);
