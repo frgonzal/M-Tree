@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
 #include <time.h>
 #include <string.h>
 #include "../../headers/point.h"
@@ -20,8 +21,6 @@ static Point random_point(void){
 
 
 Point* random_sample_generator(int sample_size){
-    srand(time(NULL));
-
     Point *points = (Point*) malloc(sample_size*sizeof(Point));
 
     for(int i=0; i<sample_size; i++)
@@ -32,15 +31,18 @@ Point* random_sample_generator(int sample_size){
 
 
 Point* random_k_sample(Point const *arr, int n, int k){
-    srand(time(NULL));
     Point *sample = malloc(n*sizeof(Point));
-    memcpy(sample, arr, n*sizeof(Point));
+    sample = memcpy(sample, arr, n*sizeof(Point));
 
-    for(Point* p=sample; p<sample+k; p++){
-        int j = rand() % (n--);
-        swap_points(p, p+j);
+    for(int i=0; i <k ; i++){
+        int j = i + rand() % (n-i);
+        swap_points(sample+i, sample+j);
     }
 
     sample = realloc(sample, k*sizeof(Point));
+    if(sample == NULL){
+        printf("Could not create random k sample");
+        exit(1);
+    }
     return sample;
 }

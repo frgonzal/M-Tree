@@ -15,4 +15,6 @@ Point* random_sample_generator(int sample_size);
 */
 Point* random_k_sample(Point const *arr, int n, int k);
 
+void random_seed();
+
 #endif

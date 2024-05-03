@@ -31,6 +31,17 @@ static void printf_array(Point const *points, int n){
     printf("]\n");
 }
 
+static void printf_sample(SampleF *f){
+    for(int i=0; i<samplef_len(f); i++){
+        Point p = samplef_get(f, i);
+        Vector *v = samplef_get_points(f, i);
+        printf("f[%d] =  (%.2f, %.2f)\n", i, p.x, p.y);
+        printf("F[%d] = ", i);
+        printf_array(vec_to_array(v), vec_len(v));
+    }   
+
+}
+
 static void printf_mtree_node(MTree *mtree){
     printf("[p=(%.2f,%.2f);h=%d;cr=%1.2f;n=%d]", mtree->p.x, mtree->p.y, mtree->h, mtree->cr, mtree->n);
 }
@@ -44,15 +55,13 @@ static void printf_mtree(MTree *mtree){
 
     while(!q_empty(q)){
         MTree* mtree = q_get(q);
-        //printf_mtree_node(mtree);
         //printf("\n");
-        if(min_h > mtree->h){
-            printf("\n");
-            min_h = mtree->h;
-        }
-        printf(" (%.2f, %.2f) ", mtree->p.x, mtree->p.y);
-        for(int i=0; i<mtree->n; i++)
+        printf_mtree_node(mtree);
+        printf("\n");
+        //printf(" (%.2f, %.2f) ", mtree->p.x, mtree->p.y);
+        for(int i=0; i<mtree->n; i++){
             q_put(q, mtree->a+i);
+        }
     }
     q_destroy(q);
     printf("\n");
@@ -81,6 +90,17 @@ void random_test(int n){
     duration = elapsed_time_millis(&start, &end);
     printf("time: %lld\n", duration);
     printf_array(points_k, 3);
+
+    printf("\n\tTest random k sample 2\n");
+    {
+        Point *points = random_sample_generator(10);
+        for(int i=0; i<100; i++){
+            Point *sample = random_k_sample(points, 10, 3);
+            printf_array(sample, 3);
+            free(sample);
+        }
+        free(points);
+    }
 
     free(points_k);
     free(points);
@@ -150,16 +170,7 @@ void vector_test(){
     vec_destroy(vec1);
 }
 
-void printf_sample(SampleF *f){
-    for(int i=0; i<samplef_len(f); i++){
-        Point p = samplef_get(f, i);
-        Vector *v = samplef_get_points(f, i);
-        printf("f[%d] =  (%.2f, %.2f)\n", i, p.x, p.y);
-        printf("F[%d] = ", i);
-        printf_array(vec_to_array(v), vec_len(v));
-    }   
 
-}
 
 void samplef_test(int k, int n){
     printf("\n\tSampleF test\n");
@@ -247,10 +258,10 @@ void mtree_cp_test(int n){
     printf(" MTree:\n");
     printf_mtree(mtree);
 
-    printf("- Search for all elements\n");
+    printf("\n- Search for all elements\n");
     {
         Point q = {0.5, 0.5};
-        double r = 0.2;
+        double r = 0.5;
         MTreeSearch ms = mtree_search(mtree, q, r);
         printf("I/Os: %d\n", ms.ios);
         printf_array(ms.points, ms.result_size);
@@ -261,18 +272,20 @@ void mtree_cp_test(int n){
     mtree_destroy(mtree);
 }
 
+
 int main(){
+    srand(time(NULL));
     printf("\t=====  TEST  =====\n");
 
     //random_sample_generator_test(2);
 
     //vector_test();
 
-    //random_test(1e5);
+    //random_test(10);
 
     //samplef_test(4, 10);
 
-    mtree_cp_test(4);
+    mtree_cp_test(25);
 
-    return 0;
+
 }

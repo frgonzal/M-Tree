@@ -48,4 +48,7 @@ Vector *samplef_get_sample(SampleF *f);
 /** Get the Array of F_i */
 Vector *samplef_get_points(SampleF *f, int i);
 
+/** Find the nearest f_i */
+int samplef_find_nearest(SampleF *f, Point *p);
+
 #endif

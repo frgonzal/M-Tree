@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include "../../headers/utils/samplef.h"
 #include "../../headers/point.h"
@@ -95,22 +96,24 @@ static void samplef_assign_point(SampleF *f, Point *p, int j){
 
 void samplef_assign_from_array(SampleF *f, Point const *points, int n){
     for(int i=0; i<n; i++){
-        Point *p = (Point*)(points+i);
+        Point const *p = points+i;
+
         double min_dist2 = 1e6;
         int k = -1;
 
-        Point const *points = vec_to_array(f->f);
-        int v_len = vec_len(f->F);
-        for(int i=0; i<v_len; i++){
-            double d2 = dist2(*p, points[i]);
+        Point const *F = vec_to_array(f->f);
+        int v_len = vec_len(f->f);
+
+        for(int j=0; j<v_len; j++){
+            double d2 = dist2(*p, F[j]);
             if(d2 < min_dist2){
-                k = i;
+                k = j;
                 min_dist2 = d2;
             }
         }
 
         Vector *v = samplef_get_points(f, k);
-        vec_push(v, p);
+        vec_push(v, (Point*)p);
     }
 }
 
@@ -124,4 +127,19 @@ void samplef_assign_vector_strtpos(SampleF *f, Vector *v, int pos){
         Point *p = (Point*)vec_get(v, i);
         samplef_assign_point(f, p, pos);
     }
+}
+
+
+int samplef_find_nearest(SampleF *f, Point *p){
+    double min_dist2 = 1e5;
+    int k = -1;
+    Point const *points = vec_to_array(f->f);
+    for(int i=0; i<vec_len(f->f); i++){
+        double d2 = dist2(*p, points[i]);
+        if(d2 < min_dist2){
+            k = i;
+            min_dist2 = d2;
+        }
+    }
+    return k;
 }

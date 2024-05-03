@@ -68,7 +68,7 @@ void vec_remove(Vector *v, int pos){
     
     int i = pos*v->type_size;
     int j = (pos+1)*v->type_size;
-    int n = (v->size - pos)*v->type_size;
+    int n = (v->size - pos - 1)*v->type_size;
     memmove(v->elements+i, v->elements+j, n);
     (v->size)--;
 
