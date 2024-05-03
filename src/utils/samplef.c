@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include "../../headers/utils/samplef.h"
 #include "../../headers/point.h"

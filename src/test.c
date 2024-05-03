@@ -43,7 +43,7 @@ static void printf_sample(SampleF *f){
 }
 
 static void printf_mtree_node(MTree *mtree){
-    printf("[p=(%.2f,%.2f);h=%d;cr=%1.2f;n=%d]", mtree->p.x, mtree->p.y, mtree->h, mtree->cr, mtree->n);
+    printf("p=(%.2f,%.2f);h=%d;cr=%1.2f;n=%d]", mtree->p.x, mtree->p.y, mtree->h, mtree->cr, mtree->n);
 }
 
 static void printf_mtree(MTree *mtree){
@@ -285,7 +285,7 @@ int main(){
 
     //samplef_test(4, 10);
 
-    mtree_cp_test(25);
+    mtree_cp_test(8);
 
 
 }

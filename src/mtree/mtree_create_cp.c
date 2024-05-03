@@ -155,11 +155,8 @@ MTree bulk_loading(Point const *points, int n){
     for(int i=0; i<mtree.n; i++){
         if(mtree.a[i].a != NULL){
             free(mtree.a[i].a);
-            mtree.a[i].a = NULL;
         }
-        mtree.a[i].n = 0;
-        mtree.a[i].h = 0;
-        mtree.a[i].cr = 0.0;
+        mtree.a[i].a = NULL;
     }
 
     //Se une cada Tj ∈ T' a su hoja en T_sup correspondiente al punto pfj ∈ F, 
@@ -172,8 +169,11 @@ MTree bulk_loading(Point const *points, int n){
 
         // encontrar el nodo mas cercano
         for(int j=0; j<mtree.n; j++){
-            if(dist2(p, mtree.a[j].p) < min_d2 && mtree.a[j].cr == 0)
+            double d2 = dist2(p, mtree.a[j].p);
+            if(dist2(p, mtree.a[j].p) < min_d2 && mtree.a[j].a == NULL){
+                min_d2 = d2;
                 k = j;
+            }
         }
         mtree.a[k] = t_prima[i];
     }
