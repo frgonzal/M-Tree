@@ -17,7 +17,7 @@ Point random_point(void);
 *   
 *   @param sample_size     El numero de puntos a generar
 */
-std::vector<Point> random_sample_generator(int sample_size);
+std::vector<Point> random_sample_generator(int sample_size, int seed);
 
 /** Returns an array of k random elements
 *   from an array of size n

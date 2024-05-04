@@ -9,14 +9,15 @@
 /** Random generator */
 static std::mt19937 gen;
 
+static int random_init = 0;
 /** To initialize the random seed */
 static void init_random(){
-    static int random_init = 0;
     if(!random_init){
         std::random_device rd;
         std::mt19937 gen(rd());
         srand(rd());
     }
+    random_init = 1;
 }
 
 
@@ -29,9 +30,10 @@ Point random_point(void){
 }
 
 
-std::vector<Point> random_sample_generator(int size){
-    init_random();
+std::vector<Point> random_sample_generator(int size, int seed){
     std::vector<Point> points(size); // Create vector
+    random_init = 0;
+    srand(seed);
 
     for(int i=0; i<size; i++){
         double x  = (double) rand() / (double) (RAND_MAX-1);

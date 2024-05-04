@@ -8,22 +8,10 @@
 #include "../headers/point.hpp"
 #include "../headers/mtree.hpp"
 #include "../headers/utils/random.hpp"
-
 #include <fstream>
 #include <iostream>
-#include <sstream> // Include for ostringstream
+#include <sstream>
 #include <ctime>
-
-//#define MAX 33554432
-#define MAX 33554
-
-
-// Function to calculate elapsed time in milliseconds
-long long elapsed_time_millis(struct timespec *start, struct timespec *end) {
-    long long start_ms = start->tv_sec * 1000LL + start->tv_nsec / 1000000LL;
-    long long end_ms = end->tv_sec * 1000LL + end->tv_nsec / 1000000LL;
-    return end_ms - start_ms;
-}
 
 
 static void printf_vector(const std::vector<Point> &points){
@@ -36,9 +24,9 @@ static void printf_vector(const std::vector<Point> &points){
     printf("]\n");
 }
 
-static void printf_mtree(MTree *raiz, int size){
+static void printf_mtree(MTree *raiz, int power){
     std::ostringstream fileName;
-    fileName << "./resultados/mtree_cp_" << size << ".csv";
+    fileName << "./resultados/mtree_cp_" << power << ".csv";
     std::ofstream outFile(fileName.str());
 
     std::queue<MTree*> q;
@@ -69,49 +57,54 @@ static void printf_mtree(MTree *raiz, int size){
                     <<";\n";
         }
     }
-
     outFile.close();
 }
 
-
-void random_test(int n, int k, int m){
-    struct timespec start, end;
-    long long duration;
-
-    printf("\n== random test ==\n");
-
-    printf("random sample generator test\n");
-    std::vector<Point> points = random_sample_generator(n);
-    //printf_vector(points);
-    printf("time: %lld\n", duration);
-
-    printf("random k sample test\n");
-
-    while(m--){
-        std::vector<Point> points_k = random_k_sample(points, k);
-        printf_vector(points_k);
-    }
-}
-
-
-void mtree_cp_test(int size, int querys){
-    printf("\nMetodo CP \n");
+void mtree_cp_test(int power, int queries, int seed_sample, int seed_query, double r){
+    int size = (1 << power);
     MTree* mtree;
-    std::vector<Point> points = random_sample_generator(size);
+    std::vector<Point> points = random_sample_generator(size, seed_sample);
 
     printf("Creando MTree de %d elementos\n", size);
     mtree = mtree_create_cp(points);
-    printf_mtree(mtree, size);
+    //printf_mtree(mtree, power);
 
-    printf("\tMTree (h=%d):\n", mtree->h);
+    printf("Search Query \n");
+    std::ostringstream fileName;
+    fileName << "./resultados/cp/search_" << power << ".csv";
+    std::ofstream outFile(fileName.str());
 
-    printf("\n=== Search Query ===\n");
-    while(querys--){
-        Point q = random_point();
-        double r = 0.02;
+    std::vector<Point> query_points = random_sample_generator(queries, seed_query);
+    for(int i=0; i<queries; i++){
+        Point q = query_points[i];
         std::tuple<std::vector<Point>, int> ms = mtree_search(mtree, q, r);
-        printf("\tPoint: (%.5f, %.5f), I/Os: %d\n", q.x, q.y, std::get<1>(ms));
+        outFile << "ios:"<< std::get<1>(ms)<<"\n";
     }
+    outFile.close();
+
+    delete mtree;
+}
+
+void mtree_ss_test(int power, int queries, int seed_sample, int seed_query, double r){
+    int size = (1 << power);
+    MTree* mtree;
+    std::vector<Point> points = random_sample_generator(size, seed_sample);
+
+    printf("Creando MTree de %d elementos\n", size);
+    mtree = mtree_create_ss(points);
+
+    printf("Search Query \n");
+    std::ostringstream fileName;
+    fileName << "./resultados/ss/search_" << power << ".csv";
+    std::ofstream outFile(fileName.str());
+
+    std::vector<Point> query_points = random_sample_generator(queries, seed_query);
+    for(int i=0; i<queries; i++){    
+        Point q = query_points[i];
+        std::tuple<std::vector<Point>, int> ms = mtree_search(mtree, q, r);
+        outFile << "ios:"<< std::get<1>(ms)<<"\n";
+    }
+    outFile.close();
 
     delete mtree;
 }
@@ -121,6 +114,13 @@ int main(){
     srand(time(NULL));
     printf("\t=====  TEST  =====\n");
 
-    int size = (1 << 10);
-    mtree_cp_test(size, 1);
+    int seed_sample = 10;
+    int seed_query  = 20;
+    int queries = 100;
+    double r = 0.02;
+
+    printf("\nMetodo CP \n");
+    for(int power=10; power<=25; power++){
+        mtree_cp_test(power, queries, seed_sample, seed_query, r);
+    }
 }

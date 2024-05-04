@@ -45,14 +45,15 @@ static int query(MTree *mtree, Point q, double r, std::vector<Point> &v){
         queue.pop();
 
         double d2 = dist2(mtree->p, q);
-        if(d2 <= r*r)
+
+        if(mtree->h == 0 && d2 <= r*r)// leaf
             v.push_back(mtree->p);
         
         if(mtree->a.size() > 0 && d2 <= (mtree->cr + r)*(mtree->cr + r)){
             for(int i=0; i<mtree->a.size(); i++)
                 queue.push(&(mtree->a)[i]);
         }
-        n++;
+        n++;//for each node
     }
 
     return n;
