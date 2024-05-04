@@ -5,7 +5,8 @@
 #include <vector>
 #include <tuple>
 
-#define B 4096
+// B = 4096 / sizeof(MTree)
+#define B 73
 
 /** @class MTree
 *   
