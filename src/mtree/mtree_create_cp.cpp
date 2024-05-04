@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cstdlib>
 #include <cmath>
 #include <vector>
@@ -35,7 +36,7 @@ MTree bulk_loading(const std::vector<Point> &points){
 
     int k;
     for(;;){
-        k = B;
+        k = std::min(B, (int)std::ceil(((double)points.size())/B));
 
         // De manera aleatoria se eligen k = min(B, n/B) puntos de P, que los llamaremos samples pf1 , . . . , pfk . 
         // Se insertan en un conjunto F de samples.
