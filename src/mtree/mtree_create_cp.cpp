@@ -15,7 +15,7 @@ static void redistribution(std::vector<Point> &f, std::vector<std::vector<Point>
 
 static void update_radius(MTree *mtree);
 
-static void append_to_leaf(MTree *mtree, MTree child, Point p);
+static void append_to_leaf(MTree *mtree, MTree *child, Point p);
 
 static std::vector<MTree> find_mtree_h(MTree *mtree, int h);
 
@@ -78,9 +78,9 @@ MTree bulk_loading(const std::vector<Point> &points){
             }
         }
     }
-    f.clear();
-    f.shrink_to_fit();
-    f = f2;
+    F.clear();
+    F.shrink_to_fit();
+    f = std::move(f2);
 
     // Etapa de balanceamiento: Se define h como la altura mínima de los árboles Tj. 
     int min_h = 1e8;
@@ -111,9 +111,9 @@ MTree bulk_loading(const std::vector<Point> &points){
             }
         }
     }
-    f.clear(); 
-    f.shrink_to_fit();
-    f = f2;
+    T.clear();
+    T.shrink_to_fit();
+    f = std::move(f2);
 
     // Se define T_sup == mtree como el resultado de la llamada al algoritmo CP aplicado a F
     MTree mtree = bulk_loading(f);
@@ -123,7 +123,7 @@ MTree bulk_loading(const std::vector<Point> &points){
     //Se une cada Tj ∈ T' a su hoja en T_sup correspondiente al punto pfj ∈ F, 
     // obteniendo un nuevo árbol T .
     for(int i=0; i<T_prima.size(); i++)
-        append_to_leaf(&mtree, T_prima[i], f[i]);
+        append_to_leaf(&mtree, &T_prima[i], f[i]);
 
     //Se setean los radios cobertores resultantes para cada entrada en este árbol.
     update_radius(&mtree);
@@ -231,7 +231,7 @@ static std::vector<MTree> find_mtree_h(MTree *mtree, int h){
 
 
 /** BFS para encontra la hoja */
-static void append_to_leaf(MTree *root, MTree child, Point p){
+static void append_to_leaf(MTree *root, MTree *child, Point p){
     std::queue<MTree*> q;
     q.push(root);
 
@@ -240,7 +240,7 @@ static void append_to_leaf(MTree *root, MTree child, Point p){
         q.pop();
 
         if(mtree->a.size() == 0 && mtree->h == 0 && point_equal(mtree->p, p)){
-            *mtree = child;
+            *mtree = *child;
             return;
         }
         for(int i=0; i<mtree->a.size(); i++){
