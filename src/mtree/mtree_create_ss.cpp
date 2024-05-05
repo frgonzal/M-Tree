@@ -21,8 +21,6 @@ static Point find_medoid(const std::vector<Point> &points);
 static double cluster_dist(const std::vector<Point> &cluster1, const std::vector<Point> &cluster2);
 
 
-
-
 MTree* mtree_create_ss(const std::vector<Point> &points){
     /* Si |Cin| ≤ B: Se define (g, r, a) = OutputHoja(Cin) y se retorna a */
     if (points.size() <= B) {
@@ -50,11 +48,22 @@ MTree* mtree_create_ss(const std::vector<Point> &points){
         std::vector<tupleGRA> C_mra;
 
         /* Por cada c ∈ Cout: Sea s = {(g, r, a)|(g, r, a) ∈ C ∧ g ∈ c}, se añade s a Cmra */
-
-
-        /* Sea C = {}. */
+        for(int i=0; i<C_out.size(); i++){
+            std::vector<Point> c = C_out[i];
+            Point g = find_medoid(c);
+            for(int j=0; j<C.size(); j++){
+                if( point_equal(std::get<0>(C[j]), g))
+                    C_mra.push_back(C[j]);
+            }
+        }
+        C.clear();
 
         /* Por cada s ∈ Cmra: Añadir OutputInterno(s) a C */
+        C.resize(C_mra.size());
+        for(int i=0; i<C_mra.size(); i++){
+            std::vector<tupleGRA> v = {C_mra[i]};
+            C[i] = output_interno(v);
+        }
     }
 
     /* Sea (g, r, a) = OutputInterno(C) */
@@ -91,6 +100,12 @@ static double cluster_dist(std::vector<Point> &cluster1, std::vector<Point> &clu
     return dist(medoid1, medoid2);
 }
 
+static tupleGRA output_hoja(const std::vector<Point> &cluster){
+    /* Sea g el medoide primario de Cin. Sea r = 0. Sea C = {} (el que corresponderá al nodo hoja). */
+    /* Por cada p ∈ Cin: Añadimos (p, null, null) a C. Seteamos r = max(r, dist(g, p)) */
+    /* Guardamos el puntero a C como a. */
+    /* Retornamos (g, r, a)*/
+}
 
 // Función para asignar cada punto a su centro de cluster (sample) más cercano
 void assign_points_to_closest_sample(Point *points, int total_points, Point *samples, int total_samples, int *closest_sample_indices) {
