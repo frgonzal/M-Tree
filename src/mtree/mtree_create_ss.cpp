@@ -2,7 +2,7 @@
 #include <cwchar>
 #include <vector>
 #include <tuple>
-#include <iostream>
+#include <algorithm>
 #include "../../headers/mtree.hpp"
 #include "../../headers/point.hpp"
 #include "../../headers/utils/closest_pair.hpp"
@@ -26,6 +26,16 @@ static std::tuple<Cluster, Cluster> closest_clusters(std::vector<Cluster> &C, Cl
 
 static std::tuple<Cluster, Cluster> min_max_split_policy(Cluster &cluster);
 
+int point_bin_search(std::vector<MTree> points, Point p){
+    int l = 0, r = points.size(), mid; 
+    while(l < r){
+        mid = l+(r-l)/2;
+        if(cmp_point_x(p, points[mid].p)) r = mid;
+        else l = mid+1;
+    }
+    if(!cmp_point_x(p, points[l].p)) exit(2);
+    else return l;
+}
 
 MTree* mtree_create_ss(const std::vector<Point> &points){
     MTree *mtree = new MTree(); 
@@ -57,21 +67,22 @@ MTree* mtree_create_ss(const std::vector<Point> &points){
         /* Sea Cmra = {}.*/
         std::vector<std::vector<MTree>> C_mra(C_out.size());
 
-        for(int k=0; k<C_out.size(); k++){
+        std::sort(C.begin(), C.end(), [](MTree mtree1, MTree mtree2){
+            return cmp_point_x(mtree1.p, mtree2.p);
+        });
+
+        for(int i=0; i<C_out.size(); i++){
             /* Por cada c ∈ Cout */
-            std::vector<Point> c = C_out[k];
+            std::vector<Point> c = C_out[i];
 
             /* Sea s = {(g, r, a)|(g, r, a) ∈ C ∧ g ∈ c} */ 
             std::vector<MTree> s(c.size());
-            for(int i=0; i<c.size(); i++){
-                for(int j=0; j<C.size(); j++){ // buscar g en C
-                    if(point_equal(c[i], C[j].p)){
-                        s[i] = C[j];
-                    }
-                }
+            for(int j=0; j<c.size(); j++){
+                int k = point_bin_search(C, c[j]);
+                s[j] = C[k];
             }
             /* se añade s a Cmra */
-            C_mra[k] = s;
+            C_mra[i] = s;
         }
         C.clear();
 
@@ -207,6 +218,8 @@ static Point find_medoid(const Cluster &points) {
         for (Point p2 : points){
             double d2 = dist2(p1, p2);
             max_d2 = max_d2 > d2 ? max_d2 : d2;
+
+            if(!(max_d2 < min_r)) break;
         }
 
         if (max_d2 < min_r) {
@@ -306,7 +319,7 @@ static std::tuple<int, double> find_nearest_point(Point p, const Cluster &c){
 }
 
 /** Assigna los puntos y retorna radio cobertor maximo al cuadrado */
-static double assign_points(Point p1, Point p2, Cluster &c1, Cluster &c2, Cluster cluster){
+static double assign_points(Point p1, Point p2, Cluster &c1, Cluster &c2, Cluster cluster, double best){
     double max_cover_radius2 = 0;
 
     int turn = 1;
@@ -331,6 +344,9 @@ static double assign_points(Point p1, Point p2, Cluster &c1, Cluster &c2, Cluste
         (*c).push_back(cluster[pos]);
         max_cover_radius2 = d2 > max_cover_radius2 ? d2 : max_cover_radius2;
 
+        if(!(max_cover_radius2 < best))// no vale la pena continuar
+            return max_cover_radius2;
+
         std::swap(cluster[pos], cluster[cluster.size()-1]);
         cluster.pop_back(); 
     }
@@ -346,7 +362,7 @@ static std::tuple<Cluster, Cluster> min_max_split_policy(Cluster &cluster){
         for(int j=i+1; j<cluster.size(); j++){
             Cluster c1, c2;
 
-            double max_cover_radius2 = assign_points(cluster[i], cluster[j], c1, c2, cluster);
+            double max_cover_radius2 = assign_points(cluster[i], cluster[j], c1, c2, cluster, min_max_cover_radius2);
             if(max_cover_radius2 < min_max_cover_radius2){
                 min_max_cover_radius2 = max_cover_radius2;
                 c1_out = std::move(c1);
