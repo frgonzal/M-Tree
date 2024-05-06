@@ -18,14 +18,14 @@ typedef struct {
 
 // Needed to sort array of points according to X coordinate
 static int compareX(const void* a, const void* b){
-	Point *p1 = (Point *)a,  *p2 = (Point *)b;
+	PointPos *p1 = (PointPos *)a,  *p2 = (PointPos *)b;
     double diff = (p1->x != p2->x) ? (p1->x - p2->x) : (p1->y - p2->y);
     if(diff == 0) return 0;
     return (diff > 0)? 1 : -1;
 }
 // Needed to sort array of points according to Y coordinate
 static int compareY(const void* a, const void* b){
-	Point *p1 = (Point *)a,  *p2 = (Point *)b;
+	PointPos *p1 = (PointPos *)a,  *p2 = (PointPos *)b;
 	double diff = (p1->y != p2->y) ? (p1->y - p2->y) : (p1->x - p2->x);
     if(diff == 0) return 0;
     return (diff > 0)? 1 : -1;
@@ -42,8 +42,9 @@ static std::tuple<int, int, double> bruteForce(PointPos *P, int n) {
         for (int j = i+1; j < n; ++j){
 			Point p1 = {P[i].x, P[i].y};
 			Point p2 = {P[j].x, P[j].y};
-            if (dist2(p1, p2) < min){
-                min = dist2(p1, p2);
+			double d = dist(p1, p2);
+            if (d < min){
+                min = d;
                 a = P[i].pos;
                 b = P[j].pos;
             }
@@ -70,8 +71,9 @@ static std::tuple<int, int, double> stripClosest(PointPos *strip, int size, doub
 		for (int j = i+1; j < size && (strip[j].y - strip[i].y) < min; ++j){
 			Point p1 = {strip[i].x, strip[i].y};
 			Point p2 = {strip[j].x, strip[j].y};
-			if (dist2(p1, p2) < min){
-				min = dist2(p1, p2);
+			double distance = dist(p1, p2);
+			if (distance < min){
+				min = distance;
                 a = strip[i].pos;
                 b = strip[j].pos;
             }
@@ -145,7 +147,7 @@ static std::tuple<int, int, double> closestUtil(PointPos *Px, PointPos *Py, int 
 
 // The main function that finds the smallest distance
 // This method mainly uses closestUtil()
-std::tuple<int, int> closest(std::vector<Point> P) {
+std::tuple<int, int> closest(const std::vector<Point> &P) {
 	PointPos *Px = (PointPos*)malloc(sizeof(PointPos)*P.size());
 	PointPos *Py = (PointPos*)malloc(sizeof(PointPos)*P.size());
 

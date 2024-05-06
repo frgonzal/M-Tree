@@ -1,5 +1,4 @@
 #include <cstdlib>
-#include <memory>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -62,30 +61,40 @@ static void printf_mtree(MTree *raiz, int power){
 
 int main(int argc, char **argv){
     printf("\t=====  TEST  =====\n");
-    std::vector<Point> points = random_sample_generator(100, 37);
-    //printf_vector(points);
 
-    int i, j;
-    std::tie(i, j) = closest(points);
-    std::cout << "\n" << i << " " << j << "\n";
+    for(int k=0; k< 1e3; k++){
+
+        std::vector<Point> points = random_sample_generator((35), k);
+        //printf_vector(points);
+
+        int i, j;
+        std::tie(i, j) = closest(points);
 
 
-    double min_dist = 1e9;
-    int n1, n2;
+        double min_dist = 1e9;
+        int n1, n2;
 
-    for(int i=0; i<points.size(); i++){
-        for(int j=0; j<points.size(); j++){
-            if(i == j) 
-                continue;
+        for(int i=0; i<points.size(); i++){
+            for(int j=0; j<points.size(); j++){
+                if(i == j) 
+                    continue;
 
-            double d2 = dist2(points[i], points[j]);
-            if(d2 < min_dist){
-                min_dist = d2;
-                n1 = i;
-                n2 = j;
+                double d2 = dist2(points[i], points[j]);
+                if(d2 < min_dist){
+                    min_dist = d2;
+                    n1 = i;
+                    n2 = j;
+                }
             }
+        }
+        if(!((n1 == j && n2 == i) || (n1 == i && n2 == j))){
+            printf("=======================");
+            std::cout << "\n" << i << " " << j << "\n";
+            std::cout << dist(points[i], points[j]) << "\n";
+            std::cout << "\n" << n1 << " " << n2 << "\n";
+            std::cout << dist(points[n1], points[n2]) << "\n";
+            printf("=======================");
         }
     }
 
-    std::cout << "\n" << i << " " << j << "\n";
 }

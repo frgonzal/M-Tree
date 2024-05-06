@@ -6,6 +6,6 @@
 #include "../point.hpp"
 
 
-std::tuple<int, int> closest(std::vector<Point> P);
+std::tuple<int, int> closest(const std::vector<Point> &P);
 
 #endif

@@ -2,8 +2,10 @@
 #include <cwchar>
 #include <vector>
 #include <tuple>
+#include <iostream>
 #include "../../headers/mtree.hpp"
 #include "../../headers/point.hpp"
+#include "../../headers/utils/closest_pair.hpp"
 
 #define MAX 1e9;
 
@@ -241,23 +243,13 @@ static Cluster closest_neighbor(Point g, std::vector<Cluster> &clusters, Cluster
 
 /** Busca los 2 clusters mas cercanos, los elimina y los devuelve */
 static std::tuple<Cluster, Cluster> closest_clusters(std::vector<Cluster> &C, Cluster &G){
+    if(C.size() != G.size())
+        exit(1);
+
     double min_dist = MAX;
+
     int n1, n2;
-
-    for(int i=0; i<C.size(); i++){
-        for(int j=0; j<C.size(); j++){
-
-            if(i == j) 
-                continue;
-
-            double d2 = dist2(G[i], G[j]);
-            if(d2 < min_dist){
-                min_dist = d2;
-                n1 = i;
-                n2 = j;
-            }
-        }
-    }
+    std::tie(n1, n2) = closest(G);
 
     if(C[n1].size() < C[n2].size())
         std::swap(n1, n2);
