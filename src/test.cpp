@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <memory>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -6,6 +7,8 @@
 #include <queue>
 #include "../headers/point.hpp"
 #include "../headers/mtree.hpp"
+#include "../headers/utils/random.hpp"
+#include "../headers/utils/closest_pair.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -59,5 +62,30 @@ static void printf_mtree(MTree *raiz, int power){
 
 int main(int argc, char **argv){
     printf("\t=====  TEST  =====\n");
+    std::vector<Point> points = random_sample_generator(100, 37);
+    //printf_vector(points);
 
+    int i, j;
+    std::tie(i, j) = closest(points);
+    std::cout << "\n" << i << " " << j << "\n";
+
+
+    double min_dist = 1e9;
+    int n1, n2;
+
+    for(int i=0; i<points.size(); i++){
+        for(int j=0; j<points.size(); j++){
+            if(i == j) 
+                continue;
+
+            double d2 = dist2(points[i], points[j]);
+            if(d2 < min_dist){
+                min_dist = d2;
+                n1 = i;
+                n2 = j;
+            }
+        }
+    }
+
+    std::cout << "\n" << i << " " << j << "\n";
 }

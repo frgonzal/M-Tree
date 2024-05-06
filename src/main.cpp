@@ -13,9 +13,9 @@
 #include <sstream>
 #include <ctime>
 
-static void printf_mtree(MTree *raiz, int power){
+static void printf_mtree(MTree *raiz, int power, std::string type){
     std::ostringstream fileName;
-    fileName << "./resultados/cp/mtree_" << power << ".csv";
+    fileName << "./resultados/" << type << "/mtree_" << power << ".csv";
     std::ofstream outFile(fileName.str());
 
     std::queue<MTree*> q;
@@ -54,7 +54,7 @@ void mtree_test(int power, int queries, int seed_sample, int seed_query, double 
 
     printf("Creando MTree de %d elementos\n\n", size);
     mtree = (*constructor)(points);
-    //printf_mtree(mtree, power);
+    printf_mtree(mtree, power, type);
 
     std::ostringstream fileName;
     fileName << "./resultados/" << type << "/search_" << power << ".csv";
@@ -80,13 +80,15 @@ int main(int argc, char **argv){
     int queries = 100;
     double r = 0.02;
 
+    /*
     printf("\nMetodo CP \n");
     for(int power=10; power<=25; power++){
         mtree_test(power, queries, seed_sample, seed_query, r, &mtree_create_cp, "cp");
     }
+    */
 
-    //printf("\nMetodo SS \n");
-    //for(int power=10; power<=25; power++){
-    //    mtree_test(power, queries, seed_sample, seed_query, r, &mtree_create_ss, "ss");
-    //}
+    printf("\nMetodo SS \n");
+    for(int power=10; power<=15; power++){
+        mtree_test(power, queries, seed_sample, seed_query, r, &mtree_create_ss, "ss");
+    }
 }
