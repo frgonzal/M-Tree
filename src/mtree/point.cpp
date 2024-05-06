@@ -1,5 +1,4 @@
 #include <math.h>
-#include <vector>
 #include "../../headers/point.hpp"
 
 
