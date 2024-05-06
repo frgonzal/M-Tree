@@ -88,7 +88,7 @@ int main(int argc, char **argv){
     */
 
     printf("\nMetodo SS \n");
-    for(int power=10; power<=13; power++){
+    for(int power=10; power<=15; power++){
         mtree_test(power, queries, seed_sample, seed_query, r, &mtree_create_ss, "ss");
     }
 }
