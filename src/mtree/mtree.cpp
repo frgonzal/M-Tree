@@ -17,11 +17,10 @@ MTree::~MTree(){}
 void MTree::add_child(MTree child){
     a.push_back(child);
 
-    double d2 = dist2(p, child.p);
-    if(d2 > cr*cr)
-        cr = sqrt(d2);
-    if(child.h >= h)
-        h = child.h + 1;
+    double r = dist(p, child.p) + child.cr;
+    cr = cr > r ? cr : r;
+
+    h  = h > child.h ? h : child.h + 1;
 }
 
 
