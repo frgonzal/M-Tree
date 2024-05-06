@@ -1,4 +1,5 @@
 #include <math.h>
+#include <vector>
 #include "../../headers/point.hpp"
 
 
@@ -29,7 +30,15 @@ void swap_points(Point *p1, Point *p2) {
 int cmp_points(void *pp1, void *pp2){
     Point p1 = *(Point*) pp1;
     Point p2 = *(Point*) pp2;
-    if(p1.x == p2.x && p1.y == p2.y) 
-        return 0;
-    return -1;
+    return (p1.x == p2.x && p1.y == p2.y) ? 0 : -1;
 }
+
+int cmp_point_x(Point p1, Point p2){
+    return (p1.x != p2.x) ? (p1.x <= p2.x) : (p1.y <= p2.y);
+}
+
+int cmp_point_y(Point p1, Point p2){
+	return (p1.y != p2.y) ? (p1.y <= p2.y) : (p1.x <= p2.x);
+}
+
+

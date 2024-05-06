@@ -41,4 +41,15 @@ void swap_points(Point *p1, Point *p2);
 */
 int cmp_points(void *pp1, void *pp2);
 
+/** Compara en base a la coordenada X 
+*   Retorna verdadero si p1 < p2
+*/
+int cmp_point_x(Point p1, Point p2);
+
+/** Compara en base a la coordenada Y 
+*   Retorna verdadero si p1 < p2
+*/
+int cmp_point_y(Point p1, Point p2);
+
+
 #endif
