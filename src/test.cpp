@@ -56,19 +56,6 @@ static void printf_mtree(MTree *raiz, int power){
     outFile.close();
 }
 
-int point_bin_search(std::vector<Point> points, Point p){
-    int l = 0, r = points.size(), mid; 
-    while(l < r){
-        mid = l+(r-l)/2;
-        if(cmp_point_x(p, (points[mid]))) r = mid;
-        else l = mid+1;
-    }
-    if(cmp_point_x(p, points[l]))
-        exit(2);
-    else
-        return l;
-}
-
 
 int main(int argc, char **argv){
     printf("\t=====  TEST  =====\n");
