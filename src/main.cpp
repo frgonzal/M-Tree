@@ -113,11 +113,10 @@ int main(int argc, char **argv){
     int queries = 100;
     double r = 0.02;
 
-    //std::cout << 4096/ sizeof(Entry) <<std::endl;
 
-    printf("\nMetodo CP \n");
-    for(int power=19; power<=25; power++)
-        mtree_test(power, queries, seed_sample, seed_query, r, &mtree_create_cp, "cp");
+    //printf("\nMetodo CP \n");
+    //for(int power=19; power<=25; power++)
+    //    mtree_test(power, queries, seed_sample, seed_query, r, &mtree_create_cp, "cp");
 
     printf("\nMetodo SS \n");
     for(int power=10; power<=18; power++)

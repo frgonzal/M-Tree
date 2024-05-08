@@ -39,10 +39,10 @@ int point_bin_search(std::vector<Entry> points, Point p){
     int l = 0, r = points.size(), mid; 
     while(l < r){
         mid = l+(r-l)/2;
-        if(p == points[mid].p) r = mid;
+        if(p <= points[mid].p) r = mid;
         else l = mid+1;
     }
-    if(!(p == points[l].p)) exit(2);
+    if(!(p <= points[l].p)) exit(2);
     else return l;
 }
 
@@ -330,14 +330,12 @@ static std::tuple<Cluster, Cluster> closest_clusters(std::vector<Cluster> &C, Cl
 
 /** Devuelve la posicion del punto mas cercano del cluster al centro p */
 static std::tuple<int, double> find_nearest_point(Point p, const Cluster &c){
-    int min_dist = MAX;
-    double distance2 = 0;
+    double distance2 = MAX;
     int pos = -1;
 
     for(int i=0; i<c.size(); i++){
         double d2 = dist2(p, c[i]);
-        if(d2 < min_dist){
-            min_dist = d2;
+        if(d2 < distance2){
             pos = i;
             distance2 = d2;
         }
@@ -383,8 +381,10 @@ static double assign_points(Point p1, Point p2, Cluster &c1, Cluster &c2, Cluste
 
 static std::tuple<Cluster, Cluster> min_max_split_policy(Cluster &cluster){
     Cluster c1_out, c2_out;
-    double min_max_cover_radius2 = MAX;
+    c1_out.reserve(cluster.size()/2);
+    c2_out.reserve(cluster.size()/2);
 
+    double min_max_cover_radius2 = MAX;
     for(int i=0; i<cluster.size(); i++){
         for(int j=i+1; j<cluster.size(); j++){
             Cluster c1, c2;
