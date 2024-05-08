@@ -5,10 +5,32 @@
 #include <vector>
 #include <tuple>
 
-// B = 4096 / sizeof(MTree)
-#define B 73
 
-/** @class MTree
+struct Node;
+struct Entry;
+struct MTree;
+
+
+struct Entry{
+    Point  p;
+    double cr;
+    Node   *a;
+
+    Entry();
+    Entry(const Point &p);
+};
+
+struct Node{
+    std::vector<Entry> entries;
+    int h;
+
+    Node();
+    ~Node();
+};
+
+
+
+/** @struct MTree
 *   
 *   Un M-Tree es un árbol que está compuesto de nodos 
 *   que contiene entradas (p, cr, a), donde p es un 
@@ -20,18 +42,17 @@
 *   interno. Si el nodo corresponde a una hoja, por 
 *   simplicidad asumiremos cr y a nulos. 
 */
-class MTree{
-    public:
-        Point p;
-        double cr;
-        std::vector<MTree> a;
-        int h;
+struct MTree {             // Entrada de un MTree
+    Node *root;
 
-        MTree();
-        MTree(Point point);
-        ~MTree(); 
-        void add_child(MTree child);
+    MTree(Node *node);
+    MTree();
+    ~MTree(); 
+
+    //void add_child(MTree child);
 };
+
+const int B = 4096 / sizeof(Entry);
 
 
 /** Search Query
@@ -41,7 +62,7 @@ class MTree{
 *   @param r Radio de busqueda
 *   
 *   @return Returns a struct with the result
-*               {points, size, IO's}
+*               {points, IO's}
 */
 std::tuple<std::vector<Point>, int> mtree_search(MTree *mtree, Point q, double r);
 
