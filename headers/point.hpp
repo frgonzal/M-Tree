@@ -6,10 +6,14 @@
 *
 *   Representa un punto en el plano
 */
-typedef struct {
+struct Point{
     double x;
     double y;
-} Point;
+
+    bool operator==(const Point &other) const;
+    bool operator<=(const Point &other) const;
+    bool operator<(const Point &other) const;
+};
 
 /** Distance between two points
 *
