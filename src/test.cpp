@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <cstdlib>
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,34 +23,30 @@ static void printf_vector(const std::vector<Point> &points){
     printf("]\n");
 }
 
-static void printf_mtree(MTree *raiz, int power){
+static void printf_mtree(MTree *mtree, int power){
     std::ostringstream fileName;
     fileName << "./resultados/cp/mtree_" << power << ".csv";
     std::ofstream outFile(fileName.str());
 
-    std::queue<MTree*> q;
-    std::vector<std::vector<MTree*>> niveles(raiz->h+1);
-    q.push(raiz);
+    std::queue<Node*> q;
+    q.push(mtree->root);
 
     while(!q.empty()){
-        MTree* mtree = q.front();
+        Node *node = q.front();
         q.pop();
-        niveles[mtree->h].push_back(mtree);
 
-        for(int i=0; i<mtree->a.size(); i++){
-            q.push(&mtree->a[i]);
-        }
-    }
+        if(node == nullptr)
+            continue;
 
-    for(int i=niveles.size()-1; i>=0; i--){
-        for(int j=0; j<niveles[i].size(); j++){
-
-            MTree *mtree = niveles[i][j];
-            outFile << "p:(" << mtree->p.x 
-                    << ","   << mtree->p.y 
-                    <<"),h:" << mtree->h
-                    <<",n:"  << mtree->a.size()
-                    <<",cr:" << mtree->cr
+        int h = node->h;
+        for(Entry e : node->entries){
+            q.push(e.a);
+            int n = (e.a == nullptr) ? 0 : e.a->entries.size();
+            outFile << "p:(" << e.p.x 
+                    << ","   << e.p.y 
+                    <<"),h:" << h
+                    <<",n:"  << n
+                    <<",cr:" << e.cr
                     <<";\n";
         }
     }

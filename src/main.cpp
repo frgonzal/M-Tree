@@ -1,4 +1,5 @@
 #include <cstdlib>
+#include <ostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -14,39 +15,40 @@
 #include <ctime>
 #include <chrono>
 
-static void printf_mtree(MTree *raiz, int power, std::string method){
+
+static void printf_mtree(MTree *mtree, int power, std::string method){
     std::ostringstream fileName;
     fileName << "./resultados/" << method << "/mtree/result/" << power << ".csv";
     std::ofstream outFile(fileName.str());
 
-    std::queue<MTree*> q;
-    std::vector<std::vector<MTree*>> niveles(raiz->h+1);
-    q.push(raiz);
+    std::queue<Node*> q;
+    q.push(mtree->root);
 
     while(!q.empty()){
-        MTree* mtree = q.front();
+        Node *node = q.front();
         q.pop();
-        niveles[mtree->h].push_back(mtree);
 
-        for(int i=0; i<mtree->a.size(); i++){
-            q.push(&mtree->a[i]);
-        }
-    }
 
-    for(int i=niveles.size()-1; i>=0; i--){
-        for(int j=0; j<niveles[i].size(); j++){
+        if(node == nullptr)
+            continue;
 
-            MTree *mtree = niveles[i][j];
-            outFile << "p:(" << mtree->p.x 
-                    << ","   << mtree->p.y 
-                    <<"),h:" << mtree->h
-                    <<",n:"  << mtree->a.size()
-                    <<",cr:" << mtree->cr
+        int h = node->h;
+        for(Entry e : node->entries){
+            int n = (e.a == nullptr) ? 0 : e.a->entries.size();
+
+            outFile << "p:(" << e.p.x 
+                    << ","   << e.p.y 
+                    <<"),h:" << h
+                    <<",n:"  << n
+                    <<",cr:" << e.cr
                     <<";\n";
+
+            q.push(e.a);
         }
     }
     outFile.close();
 }
+
 
 void printf_time(double seconds, std::string method_type, std::string test_type, int power){
     std::ostringstream fileName;
@@ -70,8 +72,9 @@ void mtree_test(int power, int queries, int seed_sample, int seed_query, double 
     std::cout << "Time taken to create MTree: " << elapsed.count() << " seconds\n";
     printf_time(elapsed.count(), type, "mtree", power);
 
-    if(size < 17) printf_mtree(mtree, power, type);
 
+    if(power < 18)
+        printf_mtree(mtree, power, type);
 
 
     std::ostringstream fileName;
@@ -110,11 +113,13 @@ int main(int argc, char **argv){
     int queries = 100;
     double r = 0.02;
 
+    //std::cout << 4096/ sizeof(Entry) <<std::endl;
+
     printf("\nMetodo CP \n");
-    for(int power=10; power<=25; power++)
+    for(int power=19; power<=25; power++)
         mtree_test(power, queries, seed_sample, seed_query, r, &mtree_create_cp, "cp");
 
     printf("\nMetodo SS \n");
-    for(int power=10; power<=25; power++)
+    for(int power=10; power<=18; power++)
         mtree_test(power, queries, seed_sample, seed_query, r, &mtree_create_ss, "ss");
 }

@@ -12,9 +12,9 @@
 typedef std::vector<Point> Cluster;
 
 
-static MTree output_hoja(const Cluster &cluster);
+static Entry output_hoja(const Cluster &cluster);
 
-static MTree output_interno(std::vector<MTree> &mtrees);
+static Entry output_interno(std::vector<Entry> &mtrees);
 
 static std::vector<Cluster> create_clusters(const Cluster &cluster);
 
@@ -26,29 +26,38 @@ static std::tuple<Cluster, Cluster> closest_clusters(std::vector<Cluster> &C, Cl
 
 static std::tuple<Cluster, Cluster> min_max_split_policy(Cluster &cluster);
 
-int point_bin_search(std::vector<MTree> points, Point p){
+Node* ss_algorithm(const std::vector<Point> &points);
+
+
+MTree* mtree_create_ss(const std::vector<Point> &points){
+    Node *root = ss_algorithm(points);
+    return new MTree(root);
+}
+
+
+int point_bin_search(std::vector<Entry> points, Point p){
     int l = 0, r = points.size(), mid; 
     while(l < r){
         mid = l+(r-l)/2;
-        if(cmp_point_x(p, points[mid].p)) r = mid;
+        if(p == points[mid].p) r = mid;
         else l = mid+1;
     }
-    if(!cmp_point_x(p, points[l].p)) exit(2);
+    if(!(p == points[l].p)) exit(2);
     else return l;
 }
 
-MTree* mtree_create_ss(const std::vector<Point> &points){
-    MTree *mtree = new MTree(); 
 
+
+Node* ss_algorithm(const std::vector<Point> &points){
     /* Si |Cin| ≤ B: Se define (g, r, a) = OutputHoja(Cin) y se retorna a */
     if (points.size() <= B) {
-        *mtree = output_hoja(points);
-        return mtree;
+        Entry e = output_hoja(points);
+        return e.a;
     }
 
     /* Sea C_out = Cluster(C_in). Sea C = {}. */
-    std::vector<std::vector<Point>> C_out = create_clusters(points);
-    std::vector<MTree> C(C_out.size());
+    std::vector<Cluster> C_out = create_clusters(points);
+    std::vector<Entry> C(C_out.size());
 
     /* Por cada c ∈ Cout: Se añade OutputHoja(c) a C */
     for(int i=0; i<C_out.size(); i++)
@@ -65,10 +74,10 @@ MTree* mtree_create_ss(const std::vector<Point> &points){
         C_out = create_clusters(C_in);
 
         /* Sea Cmra = {}.*/
-        std::vector<std::vector<MTree>> C_mra(C_out.size());
+        std::vector<std::vector<Entry>> C_mra(C_out.size());
 
-        std::sort(C.begin(), C.end(), [](MTree mtree1, MTree mtree2){
-            return cmp_point_x(mtree1.p, mtree2.p);
+        std::sort(C.begin(), C.end(), [](Entry e1, Entry e2){
+            return  (e1.p < e2.p);
         });
 
         for(int i=0; i<C_out.size(); i++){
@@ -76,7 +85,7 @@ MTree* mtree_create_ss(const std::vector<Point> &points){
             std::vector<Point> c = C_out[i];
 
             /* Sea s = {(g, r, a)|(g, r, a) ∈ C ∧ g ∈ c} */ 
-            std::vector<MTree> s(c.size());
+            std::vector<Entry> s(c.size());
             for(int j=0; j<c.size(); j++){
                 int k = point_bin_search(C, c[j]);
                 s[j] = C[k];
@@ -94,8 +103,8 @@ MTree* mtree_create_ss(const std::vector<Point> &points){
     }
 
     /* Sea (g, r, a) = OutputInterno(C). Se retorna a */
-    *mtree = output_interno(C);
-    return mtree;
+    Entry e = output_interno(C);
+    return e.a;
 }
 
 
@@ -171,22 +180,28 @@ static std::vector<Cluster> create_clusters(const std::vector<Point> &cluster){
 }
 
 
-static MTree output_hoja(const std::vector<Point> &cluster){
+static Entry output_hoja(const std::vector<Point> &cluster){
     /* Sea g el medoide primario de Cin. Sea r = 0. Sea C = {} (el que corresponderá al nodo hoja). */
     Point g = find_medoid(cluster);
-    MTree mtree = MTree(g);
+
+    Node *node = new Node();
+    Entry entry = Entry(g);
+    entry.a = node;
+
     /* Por cada p ∈ Cin: Añadimos (p, null, null) a C. Seteamos r = max(r, dist(g, p)) */
-    for(Point point : cluster){
-        MTree child = MTree(point);
-        mtree.add_child(child);
+    for(const Point point : cluster){
+        Entry e = Entry(point);
+        entry.a->entries.push_back(e);
+        double d2 = dist(entry.p, point);
+        entry.cr = std::max(entry.cr, d2);
     }
     /* Guardamos el puntero a C como a. */
     /* Retornamos (g, r, a)*/
-    return mtree;
+    return entry;
 }
 
 
-static MTree output_interno(std::vector<MTree> &C_mra){
+static Entry output_interno(std::vector<Entry> &C_mra){
     /*  Sea Cin = {g|∃(g, r, a) ∈ Cmra}. */
     std::vector<Point> C_in(C_mra.size());
     for(int i=0; i<C_mra.size(); i++)
@@ -194,15 +209,27 @@ static MTree output_interno(std::vector<MTree> &C_mra){
 
     /* G el medoide primario de Cin. Sea R = 0. Sea C = {}.*/
     Point g = find_medoid(C_in);
-    MTree mtree = MTree(g);
+
+    Node *node = new Node();
+    Entry entry = Entry(g);
+    entry.a = node;
 
     /* Por cada (g, r, a) ∈ Cmra: Añadir (g, r, a) a C. Se setea R = max(R, dist(G, g) + r) */
-    for(int i=0; i<C_mra.size(); i++)
-        mtree.add_child(C_mra[i]);
+    for(int i=0; i<C_mra.size(); i++){
+        entry.a->entries.push_back((C_mra[i]));
+
+        double d = dist(entry.p, C_mra[i].p) + C_mra[i].cr;
+        entry.cr = std::max(entry.cr, d);
+
+        for(Entry entry_child : entry.a->entries){
+            if(entry_child.a != nullptr)
+                entry.a->h = entry_child.a->h >= entry.a->h ? entry_child.a->h + 1 : entry.a->h;
+        }
+    }
 
     /* Guardamos el puntero a C como A.*/
     /* Retornamos (G, R, A)*/
-    return mtree;
+    return entry;
 }
 
 

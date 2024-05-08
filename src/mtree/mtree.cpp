@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <stdlib.h>
 #include <cmath>
 #include <tuple>
@@ -8,21 +9,23 @@
 #include "queue"
 
 
-MTree::MTree(Point point) : p(point), cr(0), h(0), a(std::vector<MTree>(0)){}
-
 MTree::MTree(){}
-
+MTree::MTree(Node *node) : root(node) {};
 MTree::~MTree(){}
 
-void MTree::add_child(MTree child){
-    a.push_back(child);
 
-    double r = dist(p, child.p) + child.cr;
-    cr = cr > r ? cr : r;
+Node::Node(): h(0), entries(std::vector<Entry>()){};
+Node::~Node(){
+    for(Entry e : entries)
+        delete e.a;
+};
 
-    h  = h > child.h ? h : child.h + 1;
-}
 
+Entry::Entry(): p({0, 0}), cr(0), a(nullptr){};
+Entry::Entry(const Point &p): p(p), cr(0), a(nullptr) {};
+
+
+//MTree::MTree(Point point) : p(point), cr(0), h(0), a(std::vector<MTree>(0)){}
 
 /** Search Query
 *   BFS algorithm
@@ -34,28 +37,35 @@ void MTree::add_child(MTree child){
 *   
 *   @return Query I/Os
 */
-static int query(MTree *mtree, Point q, double r, std::vector<Point> &v){
-    int n = 0;
-    std::queue<MTree*> queue;
-    queue.push(mtree);
+static int query(Node *root, Point q, double r, std::vector<Point> &v){
+    int ios = 0;
+    std::queue<Node*> queue;
+    queue.push(root);
 
     while(!queue.empty()){
-        MTree* mtree = queue.front();
+        Node *node = queue.front();
         queue.pop();
 
-        double d2 = dist2(mtree->p, q);
+        if(node == nullptr)
+            continue;
 
-        if(mtree->h == 0 && d2 <= r*r)// leaf
-            v.push_back(mtree->p);
-        
-        if(mtree->a.size() > 0 && d2 <= (mtree->cr + r)*(mtree->cr + r)){
-            for(int i=0; i<mtree->a.size(); i++)
-                queue.push(&(mtree->a)[i]);
+        if(node->h == 0){//hojas
+            for(Entry e : node->entries){
+                double d = dist(e.p, q);
+                if(d <= r)
+                    v.push_back(e.p);
+            }
+        }else{// revisar nodos hijos
+            for(Entry &e : node->entries){
+                double d2 = dist(e.p, q);
+                if(d2 <= e.cr + r)
+                    queue.push(e.a);
+            }
         }
-        n++;//for each node
-    }
 
-    return n;
+        ios++; 
+    }
+    return ios;
 }
 
 
@@ -64,7 +74,6 @@ std::tuple<std::vector<Point>, int> mtree_search(MTree *mtree, Point q, double r
     if(mtree == nullptr)
         return std::make_tuple(v, 0);
 
-    int ios = query(mtree, q, r, v);
-
+    int ios = query(mtree->root, q, r, v);
     return std::make_tuple(v, ios);
 }
