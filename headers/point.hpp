@@ -8,6 +8,9 @@ struct Point{
     double x;   /*  x in [0, 1]  */
     double y;   /*  y in [0, 1]  */
 
+    /** Default constructor */
+    Point() = default;
+
     /** Compares two points
     *   @return True if both points have the same position
     */

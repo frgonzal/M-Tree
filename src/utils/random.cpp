@@ -12,9 +12,12 @@ static std::mt19937 gen;
 static int random_init = 0;
 /** To initialize the random seed */
 static void init_random(){
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    srand(rd());
+    if(!random_init){
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        srand(rd());
+        random_init = 1;
+    }
 }
 
 

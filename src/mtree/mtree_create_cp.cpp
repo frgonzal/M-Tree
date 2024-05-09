@@ -4,40 +4,52 @@
 #include <tuple>
 #include <vector>
 #include <queue>
-#include <iostream>
 #include "../../headers/mtree.hpp"
 #include "../../headers/point.hpp"
 #include "../../headers/utils/random.hpp"
 
-long long abc = 0;
 
-struct NodePoint{
-    Node *node;
-    const Point &p;
-};
+/** The bulk loading algorithm to generate the Nodes */
+Node* bulk_loading(const std::vector<Point> &points);
 
+/** Assigns a sample of points to its nearest sample f_k */
 static void assign_to_nearest(std::vector<Point> &f, std::vector<std::vector<Point>> &F, const std::vector<Point> &points);
 
+/** If a sample F has less than B/2 points, delete it and redistribute the points */
 static void redistribution(std::vector<Point> &f, std::vector<std::vector<Point>> &F);
 
+/** Find all the child nodes with height h */
 static std::vector<std::tuple<Node*, Point>> find_node_h(Node *node, int h);
 
+/** Connect the Trees T' to the entry on the leaf that has its same point */
 static void append_to_leaf(std::vector<Entry*> &entries, const std::vector<Node*> &F, const std::vector<Point> &f);
 
+/** Calculates the raius for all the entries of T_sup */
 static void update_radius(std::vector<Entry*> &entries);
 
+/** Calculates the new height */
 static void update_height(std::vector<std::vector<Node*>> &levels);
 
+/** Get all the entries from T_sup */
 static std::vector<Entry*> get_all_entries(Node *root);
 
+/** Get all the entries from T_sup where the entry is on the leaf */
 static std::vector<Entry*> get_all_leaf_entries(Node *root);
 
+/** Get all nodes of T_sup sorted by height */
 static std::vector<std::vector<Node*>> get_all_levels(Node *root);
+
+
+
+
+MTree* mtree_create_cp(const std::vector<Point> &points){
+    Node *root = bulk_loading(points);
+    return new MTree(root);
+}
 
 
 /** The bulk_loading algorithm */
 Node* bulk_loading(const std::vector<Point> &points){
-    abc++;
     // Si |P| ≤ B, se crea un árbol T , se insertan todos los puntos a T y se retorna T
     if(points.size() <= B){
         Node *node = new Node();
@@ -152,12 +164,6 @@ Node* bulk_loading(const std::vector<Point> &points){
 }
 
 
-MTree* mtree_create_cp(const std::vector<Point> &points){
-    Node *root = bulk_loading(points);
-    return new MTree(root);
-}
-
-
 /** Assigns points to their neares sample */
 static void assign_to_nearest(std::vector<Point> &f, std::vector<std::vector<Point>> &F, const std::vector<Point> &points){
     F.resize(f.size(), std::vector<Point>(0));
@@ -228,12 +234,10 @@ static int bin_search(const std::vector<Entry*> &points, const Point &p){
     while(l < r){
         mid = l+(r-l)/2;
 
-        if(p <= points[mid]->p){
+        if(p <= points[mid]->p)
             r = mid;
-        } 
-        else {
+        else
             l = mid+1;
-        }
     }
 
     if(!(p <= points[l]->p)) exit(11);
@@ -249,7 +253,6 @@ static void append_to_leaf(std::vector<Entry*> &entries, const std::vector<Node*
         int k = bin_search(entries, f[i]); 
         entries[k]->a = T[i];
     }
-
 }
 
 

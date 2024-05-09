@@ -8,23 +8,21 @@
 #include "queue"
 
 
-MTree::MTree(){}
+/** @struct MTree */
 MTree::MTree(Node *node) : root(node) {};
-MTree::~MTree(){}
+MTree::~MTree(){
+    delete root;
+}
 
-
-Node::Node(): h(0), entries(std::vector<Entry>()){};
+/** @struct Node */
 Node::~Node(){
     for(Entry e : entries)
         delete e.a;
 };
 
-
-Entry::Entry(): p({0, 0}), cr(0), a(nullptr){};
+/** @struct Entry */
 Entry::Entry(const Point &p): p(p), cr(0), a(nullptr) {};
 
-
-//MTree::MTree(Point point) : p(point), cr(0), h(0), a(std::vector<MTree>(0)){}
 
 /** Search Query
 *   BFS algorithm
@@ -48,20 +46,19 @@ static int query(Node *root, Point q, double r, std::vector<Point> &v){
         if(node == nullptr)
             continue;
 
-        if(node->h == 0){//hojas
+        if(node->entries[0].a == nullptr){// Entry of a leaf
             for(Entry e : node->entries){
                 double d = dist(e.p, q);
                 if(d <= r)
                     v.push_back(e.p);
             }
-        }else{// revisar nodos hijos
+        }else{
             for(Entry &e : node->entries){
                 double d2 = dist(e.p, q);
                 if(d2 <= e.cr + r)
                     queue.push(e.a);
             }
         }
-
         ios++; 
     }
     return ios;

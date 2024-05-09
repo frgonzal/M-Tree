@@ -8,14 +8,18 @@
 #include <queue>
 #include "../headers/point.hpp"
 #include "../headers/mtree.hpp"
-#include "../headers/utils/random.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <ctime>
-#include <chrono>
+#include "../headers/utils/random.hpp"
 
 
+/** Writes the structure of the MTree into a file 
+*   Writes every Entry as [p, h, n, cr]
+*   where h is the height of the node
+*   and n is the number entries in the Node a
+*/
 static void printf_mtree(MTree *mtree, int power, std::string method){
     std::ostringstream fileName;
     fileName << "./resultados/" << method << "/mtree/result/" << power << ".csv";
@@ -50,75 +54,42 @@ static void printf_mtree(MTree *mtree, int power, std::string method){
 }
 
 
-void printf_time(double seconds, std::string method_type, std::string test_type, int power){
-    std::ostringstream fileName;
-    fileName << "./resultados/" << method_type << "/" << test_type << "/time/" << power << ".csv";
-    std::ofstream outFile(fileName.str());
-    outFile << seconds << "\n";
-    outFile.close();
-}
-
-void mtree_test(int power, int queries, int seed_sample, int seed_query, double r, MTree*(*constructor)(const std::vector<Point>&), std::string type){
-    int size = (1 << power);
-    MTree* mtree;
-    std::vector<Point> points = random_sample_generator(size, seed_sample);
-
-    printf("\nCreating MTree of %d elements\n", size);
-
-    auto start = std::chrono::high_resolution_clock::now();
-    mtree = (*constructor)(points);
-    auto end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double> elapsed = end - start;
-    std::cout << "Time taken to create MTree: " << elapsed.count() << " seconds\n";
-    printf_time(elapsed.count(), type, "mtree", power);
-
-
-    if(power < 18)
-        printf_mtree(mtree, power, type);
-
-
-    std::ostringstream fileName;
-    fileName << "./resultados/" << type << "/search/result/" << power << ".csv";
-    std::ofstream outFile(fileName.str());
-
-    double total_time = 0;
-    std::vector<Point> query_points = random_sample_generator(queries, seed_query);
-    for(int i=0; i<queries; i++){    
-        Point q = query_points[i];
-
-        start = std::chrono::high_resolution_clock::now();
-        std::tuple<std::vector<Point>, int> ms = mtree_search(mtree, q, r);
-        end = std::chrono::high_resolution_clock::now();
-        elapsed = (end - start);
-        total_time += elapsed.count();
-
-        outFile << "size:"<<std::get<0>(ms).size() <<",ios:"<< std::get<1>(ms)<<";\n";
-    }
-    elapsed = end - start;
-    std::cout << "Time taken for 100 queries: " << total_time << " seconds\n";
-    printf_time(total_time, type, "search", power);
-
-    outFile.close();
-
-
-    delete mtree;
-}
-
 int main(int argc, char **argv){
     srand(time(NULL));
     printf("\t=====  RUN  =====\n");
 
-    int seed_sample = 1;
-    int seed_query  = 2;
-    int queries = 100;
+    int seed_sample = 42123423;
+    int seed_query  = 51221343;
+    int queries = 1000;
     double r = 0.02;
 
+    int size = (2 << 10);
 
-    //printf("\nMetodo CP \n");
-    //for(int power=19; power<=25; power++)
-    //    mtree_test(power, queries, seed_sample, seed_query, r, &mtree_create_cp, "cp");
+    // Generate the samples for the MTree and for the query
+    std::vector<Point> points = random_sample_generator(size, seed_sample);
+    std::vector<Point> query_points = random_sample_generator(queries, seed_query);
 
-    printf("\nMetodo SS \n");
-    for(int power=10; power<=18; power++)
-        mtree_test(power, queries, seed_sample, seed_query, r, &mtree_create_ss, "ss");
+    MTree *mtree;
+
+    std::cout << "Creando MTree con método CP\n";
+    mtree = mtree_create_cp(points);
+    double total_ios = 0;
+    std::cout << "Realizando busquedas\n";
+    for(int i=0; i<queries; i++){
+        auto[_, ios] = mtree_search(mtree, query_points[i], r);
+        total_ios += ios / (double) queries;
+    }
+    std::cout << "Promedio de I/O's por busqueda: " << total_ios << "\n\n";
+    delete mtree;
+
+    std::cout << "Creando MTree con método SS\n";
+    mtree = mtree_create_ss(points);
+    std::cout << "Realizando busquedas\n";
+    total_ios = 0;
+    for(int i=0; i<queries; i++){
+        auto[_, ios] = mtree_search(mtree, query_points[i], r);
+        total_ios += ios / (double) queries;
+    }
+    std::cout << "Promedio de I/O's por busqueda: " << total_ios << "\n\n";
+    delete mtree;
 }

@@ -1,5 +1,12 @@
-// A divide and conquer program in C++ to find the smallest distance from a
-// given set of points.
+/**
+*	A divide and conquer program in C++ to find the smallest distance from a
+*	given set of points.
+*
+* 	The algorithm was modified to work properly for this proyect
+*
+*	@refer: https://www.geeksforgeeks.org/closest-pair-of-points-onlogn-implementation/
+*/
+
 
 #include <stdlib.h>
 #include <float.h>
@@ -9,12 +16,13 @@
 #include "../../headers/point.hpp"
 #include "../../headers/utils/closest_pair.hpp"
 
+
+/** To save the original position of the Point */
 typedef struct {
 	double x, y;
 	int pos;
 } PointPos;
 
-//Refer: http://www.cplusplus.com/reference/clibrary/cstdlib/qsort/ */
 
 // Needed to sort array of points according to X coordinate
 static int compareX(const void* a, const void* b){
@@ -50,7 +58,6 @@ static std::tuple<int, int, double> bruteForce(PointPos *P, int n) {
             }
 		}
 	}
-
     return std::make_tuple(a, b, min);
 }
 
@@ -148,6 +155,8 @@ static std::tuple<int, int, double> closestUtil(PointPos *Px, PointPos *Py, int 
 // The main function that finds the smallest distance
 // This method mainly uses closestUtil()
 std::tuple<int, int> closest(const std::vector<Point> &P) {
+
+	/** The algorithm uses Arrays */
 	PointPos *Px = (PointPos*)malloc(sizeof(PointPos)*P.size());
 	PointPos *Py = (PointPos*)malloc(sizeof(PointPos)*P.size());
 

@@ -12,40 +12,39 @@
 typedef std::vector<Point> Cluster;
 
 
+/** The algorithm to create the MTree */
+Node* ss_algorithm(const std::vector<Point> &points);
+
+/** The OutputHoja algorithm*/
 static Entry output_hoja(const Cluster &cluster);
 
+/** The OutputInterno algorithm */
 static Entry output_interno(std::vector<Entry> &mtrees);
 
+/** The algorithm to create clusters. Returns a vector of clusters */
 static std::vector<Cluster> create_clusters(const Cluster &cluster);
 
+/** Returns the medoid of a cluster */
 static Point find_medoid(const Cluster &points);
 
+/** Find the neares cluster to another cluster. it uses the medoid instead of the cluster */
 static Cluster closest_neighbor(Point g, std::vector<Cluster> &clusters, Cluster &G);
 
+/** Find the closest clusters from a vector of clusters, and returns them. */
 static std::tuple<Cluster, Cluster> closest_clusters(std::vector<Cluster> &C, Cluster &G);
 
+/** Create two clusters using the MinMaxSplitPolicy */
 static std::tuple<Cluster, Cluster> min_max_split_policy(Cluster &cluster);
 
-Node* ss_algorithm(const std::vector<Point> &points);
+/** Returns the position of the searched point, using binary search */
+static int point_bin_search(std::vector<Entry> points, Point p);
+
 
 
 MTree* mtree_create_ss(const std::vector<Point> &points){
     Node *root = ss_algorithm(points);
     return new MTree(root);
 }
-
-
-int point_bin_search(std::vector<Entry> points, Point p){
-    int l = 0, r = points.size(), mid; 
-    while(l < r){
-        mid = l+(r-l)/2;
-        if(p <= points[mid].p) r = mid;
-        else l = mid+1;
-    }
-    if(!(p <= points[l].p)) exit(2);
-    else return l;
-}
-
 
 
 Node* ss_algorithm(const std::vector<Point> &points){
@@ -401,3 +400,13 @@ static std::tuple<Cluster, Cluster> min_max_split_policy(Cluster &cluster){
     return std::make_tuple(c1_out, c2_out);
 }
 
+static int point_bin_search(std::vector<Entry> points, Point p){
+    int l = 0, r = points.size(), mid; 
+    while(l < r){
+        mid = l+(r-l)/2;
+        if(p <= points[mid].p) r = mid;
+        else l = mid+1;
+    }
+    if(!(p <= points[l].p)) exit(2);
+    else return l;
+}

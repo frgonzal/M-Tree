@@ -5,21 +5,16 @@
 #include <vector>
 
 
-/** Genera un Punto con coordenadas aleatorias
-*   Las coordenadas estan en [0, 1]
-*   
-*   @return Point(x, y)
+/** Returns a random Point
+*   x and y are between 0 and 1
 */
 Point random_point(void);
 
-/** Genera un array de puntos
-*   Los puntos tienen coordenadas con valores entre 0 y 1
-*   
-*   @param sample_size     El numero de puntos a generar
+/** Returns a random vector of size sample_size
 */
 std::vector<Point> random_sample_generator(int sample_size, int seed);
 
-/** Returns an array of k random elements
+/** Returns a vector of k random elements
 *   from an array of size n
 */
 std::vector<Point> random_k_sample(std::vector<Point> points, int k);
