@@ -114,7 +114,7 @@ int main(int argc, char **argv){
     double r = 0.02;
 
     int max_power_cp = 25;
-    int max_power_ss = -1;
+    int max_power_ss = 25;
 
     printf("\nMetodo CP \n");
     for(int power=10; power<=max_power_cp; power++)
