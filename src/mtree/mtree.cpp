@@ -35,31 +35,33 @@ Entry::Entry(const Point &p): p(p), cr(0), a(nullptr) {};
 *   @return Query I/Os
 */
 static int query(Node *root, Point q, double r, std::vector<Point> &v){
+    if(root == nullptr)
+        return 0;
+
     int ios = 0;
     std::queue<Node*> queue;
     queue.push(root);
+
 
     while(!queue.empty()){
         Node *node = queue.front();
         queue.pop();
 
-        if(node == nullptr)
-            continue;
-
-        if(node->entries[0].a == nullptr){// Entry of a leaf
+        ios++; 
+        if(node->h == 0){// leaf
             for(Entry e : node->entries){
-                double d = dist(e.p, q);
-                if(d <= r)
+                double d2 = dist2(e.p, q);
+                if(d2 <= r*r)
                     v.push_back(e.p);
             }
         }else{
-            for(Entry &e : node->entries){
-                double d2 = dist(e.p, q);
-                if(d2 <= e.cr + r)
+            for(Entry e : node->entries){
+                double d2 = dist2(e.p, q);
+                double max_d2 = e.cr + r;
+                if(d2 <= max_d2*max_d2 && e.a != nullptr)
                     queue.push(e.a);
             }
         }
-        ios++; 
     }
     return ios;
 }
