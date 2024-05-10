@@ -95,7 +95,7 @@ void mtree_test(int power, int queries, int seed_sample, int seed_query, double 
         outFile << "size:"<<std::get<0>(ms).size() <<",ios:"<< std::get<1>(ms)<<";\n";
     }
     elapsed = end - start;
-    std::cout << "Time taken for 100 queries: " << total_time << " seconds\n";
+    std::cout << "Time taken for "<< queries <<" queries: " << total_time << " seconds\n";
     printf_time(total_time, type, "search", power);
 
     outFile.close();
@@ -108,13 +108,18 @@ int main(int argc, char **argv){
     srand(time(NULL));
     printf("\t=====  TEST  =====\n");
 
-    int seed_sample = 1;
-    int seed_query  = 2;
-    int queries = 100;
+    //int seed_sample = rand();
+    //int seed_query  = rand();
+
+    int seed_sample = 333071598;
+    int seed_query  = 948198108;
+
+
+    int queries = (2 << 10);
     double r = 0.02;
 
     int max_power_cp = 25;
-    int max_power_ss = 25;
+    int max_power_ss = 18;
 
     printf("\nMetodo CP \n");
     for(int power=10; power<=max_power_cp; power++)
