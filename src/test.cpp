@@ -108,18 +108,15 @@ int main(int argc, char **argv){
     srand(time(NULL));
     printf("\t=====  TEST  =====\n");
 
-    //int seed_sample = rand();
-    //int seed_query  = rand();
-
     int seed_sample = 333071598;
     int seed_query  = 948198108;
 
+    int queries = (1 << 11); // se realizan 2^11 consultas, se pueden hacer menos
+    double r = 0.02;         //radio de busqueda
 
-    int queries = (2 << 10);
-    double r = 0.02;
-
+    // modificar estos valores para hacer mas o menos test de cada metodo
     int max_power_cp = 25;
-    int max_power_ss = 18;
+    int max_power_ss = 25;
 
     printf("\nMetodo CP \n");
     for(int power=10; power<=max_power_cp; power++)
