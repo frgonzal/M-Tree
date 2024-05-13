@@ -99,6 +99,7 @@ Además, el archivo "test" escribirá las pruebas realizadas en la carpeta ./res
 Los resultados de la experimentación se encuentran disponibles en el archivo read.ipynb, 
 el cual lee los archivos generados por "test" para generar gráficos y figuras con la información
 obtenida.
+Para poder ejecutar el .ipynb, se cuenta con un archivo requirements.txt al interior de la carpeta ./resultados con todos los módulos necesarios.
 
 
 ### Algunos resultados 
