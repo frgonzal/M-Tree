@@ -1,37 +1,31 @@
 # MTree
-El M-Tree12 es un método de acceso métrico dinámico, que consiste en un árbol balanceado.
 
+The M-Tree is a dynamic metric access method, consisting of a balanced tree.
 
+## Running the Project
+### Required!
+The project was built on a Linux operating system and used the "make" functionality for compiling and running the project.  
+Therefore, it is necessary to have the "make" functionality to run the tests and the main program.
 
-
-## Ejecutar Proyecto
-### Necesario!
-El proyecto se construyo en un sistema operativo con linux y se utilizo
-la funcionalidad "make" para la compilación y ejecución del proyecto.   
-Por lo anterior, es necesario tener la funcionalidad "make" para ejecutar los test y el main.
-
-
-
-### Comandos para ejecutar el proyecto
+### Commands to run the project
 
     make run
     make test
 
-
 ### make run
-Compila y ejecuta el archivo "main", que contiene un test de uso básico para un MTree.  
-Permite crearlo y realizar consultas al MTree creado.   
-Este es el archivo para el uso normal del MTree.
+Compiles and runs the "main" file, which contains a basic usage test for an M-Tree.  
+It allows creating and querying the created M-Tree.  
+This is the file for normal use of the M-Tree.
 
 ### make test
-Compila y ejecuta el archivo "test", que contiene el código utilizado para la experimentación.  
-Crea un MTree utilizando ambos métodos y realiza 100 consultas con el MTree creado.
-Esto lo hace para $n \in \{2^{10},...,2^{25}\}$, siendo n el tamaño del conjunto 
-de puntos que se utiliza para la creación del MTree.  
-Además, el archivo "test" escribirá las pruebas realizadas en la carpeta ./resultados
+Compiles and runs the "test" file, which contains the code used for experimentation.  
+It creates an M-Tree using both methods and performs 100 queries with the created M-Tree.  
+This is done for $n \in \{2^{10},...,2^{25}\}$, where n is the size of the point set used to create the M-Tree.  
+Additionally, the "test" file will write the tests performed to the ./results folder.
+
+## Project Structure    
 
 
-## Estructura del proyecto
 
      MTree
     ├──  build
