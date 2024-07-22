@@ -34,84 +34,47 @@ Además, el archivo "test" escribirá las pruebas realizadas en la carpeta ./res
 ## Estructura del proyecto
 
      MTree
-    │
-    ├──  build                         ## para guardar los ejecutables
+    ├──  build
     │   ├──  main
-    │   ├──  main.o
     │   ├──  test
-    │   └──  test.o
-    │
-    ├──  headers                       ## headers de todo el proyecto, con la documentacion de las funciones y estructuras
+    ├──  headers
     │   ├──  mtree.hpp
     │   ├──  point.hpp
     │   └──  utils
     │       ├──  closest_pair.hpp
     │       └──  random.hpp
-    │
-    ├── 󱧼 src                           ## archivos del proyecto
-    │   ├──  main.cpp                  ## (main) archivo para usar la estructura y funciones
-    │   ├──  mtree
-    │   │   ├──  mtree.cpp
-    │   │   ├──  mtree_create_cp.cpp
-    │   │   ├──  mtree_create_ss.cpp
-    │   │   └──  point.cpp
-    │   ├──  test.cpp                  ## (test) archivo con los test utilizados para obtener los resultados
-    │   └──  utils
-    │       ├──  closest_pair.cpp
-    │       └──  random.cpp
-    │
-    ├──  Makefile                      ## Makefile del proyecto
-    │
-    └──  resultados                    ## Los resultados de la ejecucion de los algoritmos
-        ├──  cp                        ## Resultados de Ciaccia-Patella
-        │   ├──  mtree                 ## resultados de la construccion
-        │   │   ├──  result
-        │   │   │   └──  power.csv
-        │   │   └──  time
-        │   │       └──  power.csv
-        │   └──  search                ## resultados de la busqueda
-        │       ├──  result
-        │       │   └──  power.csv
-        │       └──  time
-        │           └──  power.csv
-        ├──  img                       ## imagenes de MTrees creados
-        │   ├──  cp_power.png
-        │   └──  ss_power.png
-        ├──  read.ipynb                ## Archivo ipynb para leer los resultados y obtener graficos para interpretar
-        ├──  requirements.txt          ## Archivo con los modulos necesarios para ejecutar read.ipynb
-        └──  ss                        ## Resultados de Sexton-Swinbank
-            ├──  mtree
-            │   ├──  result
-            │   │   └──  power.csv
-            │   └──  time
-            │       └──  power.csv
-            └──  search
-                ├──  result
-                │   └──  power.csv
-                └──  time
-                    └──  power.csv
+    ├──  Makefile
+    ├──  README.md
+    ├──  results
+    │   ├──  img/
+    │   ├──  Informe.pdf
+    │   ├──  results.pdf
+    │   ├──  cp/
+    │   └──  ss/
+    └── 󱧼 src
+        ├──  main.cpp
+        ├──  mtree
+        │   ├──  mtree.cpp
+        │   ├──  mtree_create_cp.cpp
+        │   ├──  mtree_create_ss.cpp
+        │   └──  point.cpp
+        ├──  test.cpp
+        └──  utils
+            ├──  closest_pair.cpp
+            └──  random.cpp
 
 
 
 
 ## Resultados
-
-Los resultados de la experimentación se encuentran disponibles en el archivo read.ipynb, 
-el cual lee los archivos generados por "test" para generar gráficos y figuras con la información
-obtenida.
-Para poder ejecutar el .ipynb, se cuenta con un archivo requirements.txt al interior de la carpeta ./resultados con todos los módulos necesarios.
-
+Los resultados de la experimentación se encuentran disponibles en la carpeta ./results.
 
 ### Algunos resultados 
 
 #### Método Ciaccia-Patella 
-![Alt](./resultados/img/cp_13.png)
+![Alt](./results/img/cp_13.png)
 
 
 #### Método Sexton-Swinbank 
-![Alt](./resultados/img/ss_13.png)
+![Alt](./results/img/ss_13.png)
 
-
-
-
-Que el poder de Navarro te acompañe.
